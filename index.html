@@ -19,55 +19,33 @@
         --text-gray: #475569;
     }
     body { background-color: #f1f5f9; font-family: 'Prompt', sans-serif; display: flex; overflow-x: hidden; margin: 0;}
-    
-    /* Sidebar */
     .sidebar { background-color: #0f172a; width: 260px; height: 100vh; position: fixed; display: flex; flex-direction: column; color: #cbd5e1; z-index: 50; }
     .sidebar-brand-box { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px; }
     .nav-item { padding: 14px 24px; display: flex; align-items: center; cursor: pointer; border-left: 4px solid transparent; transition: 0.2s; font-size: 14px;}
     .nav-item:hover, .nav-item.active { background-color: #1e293b; color: white; border-left-color: #3b82f6; }
     .nav-item i { width: 24px; font-size: 1.1rem; }
-    
     .main-content { margin-left: 260px; padding: 32px; width: calc(100% - 260px); min-height: 100vh; }
-    
-    /* App Views */
     .tab-view { display: none; animation: fadeIn 0.3s ease-in-out; }
     .tab-view.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* Custom UI Components */
     .card-ui { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 12px; box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05); padding: 25px; margin-bottom: 25px;}
     .card-ui h3 { font-size: 16px; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 8px; font-weight: 600;}
-    
     .grid-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
     .input-wrapper { display: flex; flex-direction: column; gap: 6px; }
     .input-wrapper label { font-size: 13px; font-weight: 500; color: var(--text-gray); }
     input, select, textarea { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Prompt', sans-serif; font-size: 14px; outline: none; background: rgba(255, 255, 255, 0.9); color: #1e293b;}
-    textarea { height: 120px; resize: none; font-family: monospace; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; outline: none; background: rgba(255, 255, 255, 0.9); color: #1e293b; }
-    input:focus, select:focus, textarea:focus { background: #ffffff; border-color: rgba(37, 99, 235, 0.6); box-shadow: 0 0 12px rgba(37, 99, 235, 0.15); }
-    
+    textarea { height: 120px; resize: none; font-family: monospace; }
     .btn-ui { background-color: var(--primary); color: white; padding: 10px 24px; border: none; border-radius: 6px; font-family: 'Prompt', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s;}
     .btn-ui:hover { background-color: var(--primary-light); }
-    
     table.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
     table.data-table th { background-color: #f8fafc; padding: 12px; color: var(--primary); border-bottom: 2px solid var(--border-color); border-top: 1px solid var(--border-color); text-align: left; font-weight: bold;}
     table.data-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
     table.data-table tr.total-row td { background-color: #f1f5f9; font-weight: 600; color: var(--primary); border-top: 2px solid var(--primary); }
-
     .loading { display: none; color: var(--primary-light); font-size: 14px; align-items: center; gap: 8px; margin-top: 10px; }
     .loading i { animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    /* --- CSS สำหรับสลิปเงินเดือน A4 --- */
     .slip-outer-container { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 25px; }
-    .slip-box { 
-        background-color: white; 
-        border: 1px solid #000; 
-        padding: 20px 30px; 
-        color: #000; 
-        font-family: 'Prompt', sans-serif;
-        width: 100%;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-    }
+    .slip-box { background-color: white; border: 1px solid #000; padding: 20px 30px; color: #000; font-family: 'Prompt', sans-serif; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
     .slip-header { display: flex; justify-content: space-between; border-bottom: 1px solid #000; padding-bottom: 8px; margin-bottom: 12px; align-items: center; }
     .company-brand { display: flex; align-items: center; gap: 12px; }
     .company-logo { width: 45px; height: auto; object-fit: contain; }
@@ -81,20 +59,14 @@
     .slip-table td { border: 1px solid #000; padding: 4px 8px; vertical-align: top; width: 33.33%; }
     .row-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
     .slip-input { width: 80px; border: none; border-bottom: 1px dotted #ccc; text-align: right; font-family: inherit; font-size: 11.5px; color: #000; outline: none; padding: 1px; background: transparent; }
-    .slip-input:hover { border-bottom: 1px dashed var(--primary-light); background-color: #f0fdf4; }
-    .slip-input:focus { border-bottom: 1px solid var(--primary-light); background-color: #e0f2fe; font-weight: 600; }
     .slip-total-box { display: flex; justify-content: space-between; font-weight: 600; padding: 2px 0; }
-
     @media print {
         body { background: #fff !important; color: #000 !important; padding: 0 !important; margin: 0 !important; }
         .sidebar, .header-app, .card-ui, .btn-ui, .control-panel-row, .card-header, .slip-warning-text { display: none !important; }
         body * { visibility: hidden; }
         .slip-outer-container, .slip-outer-container * { visibility: visible; }
         .slip-outer-container { position: absolute; left: 0; top: 0; width: 100%; max-width: 100% !important; display: flex !important; flex-direction: column !important; gap: 0 !important; padding: 0 !important; margin: 0 !important; }
-        .slip-box { box-sizing: border-box !important; width: 100% !important; height: 48vh !important; min-height: 48vh !important; max-height: 48vh !important; border: none !important; border-bottom: 1px dashed #000 !important; padding: 0.5cm 1cm !important; box-shadow: none !important; page-break-inside: avoid !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: flex-start !important; }
-        .slip-box:last-child { border-bottom: none !important; }
-        .slip-box:nth-child(2n) { page-break-after: always !important; }
-        .slip-input { border-bottom: none !important; background: transparent !important; padding: 0 !important; }
+        .slip-box { box-sizing: border-box !important; width: 100% !important; height: 48vh !important; border: none !important; border-bottom: 1px dashed #000 !important; padding: 0.5cm 1cm !important; page-break-inside: avoid !important; overflow: hidden !important; display: flex !important; flex-direction: column !important; justify-content: flex-start !important; }
     }
   </style>
 </head>
@@ -127,7 +99,7 @@
     <div class="header-app flex justify-between items-center mb-6 card-ui py-4">
       <div>
         <h1 class="text-2xl font-bold text-slate-800">EXECUTIVE PORTAL & PAYROLL STUDIO</h1>
-        <p class="text-sm text-slate-500">ระบบติดตามสถานะทางการเงินและจัดการทรัพยากรบุคคล (กรองข้อมูลเฉพาะทีมเซลอัตโนมัติ)</p>
+        <p class="text-sm text-slate-500">ระบบติดตามสถานะทางการเงินและจัดการทรัพยากรบุคคล (White & Blue Theme)</p>
       </div>
       <div class="flex items-center gap-3">
         <div class="flex flex-col items-start">
@@ -155,37 +127,45 @@
       </div>
       
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <div class="card-ui"><h3 class="card-header text-sm font-bold text-slate-600 mb-4">SALES TEAM COST TREND</h3><div class="relative w-full" style="height: 250px;"><canvas id="payrollTrendChart"></canvas></div></div>
-        <div class="card-ui"><h3 class="card-header text-sm font-bold text-slate-600 mb-4">SALES vs SALES PAYROLL</h3><div class="relative w-full" style="height: 250px;"><canvas id="salesPayrollChart"></canvas></div></div>
+        <div class="card-ui"><h3 class="card-header text-sm font-bold text-slate-600 mb-4"><i class="fa fa-chart-bar text-blue-600"></i> MONTHLY TOTAL NET REVENUE vs ALL DEPT PAYROLL</h3><div class="relative w-full" style="height: 250px;"><canvas id="payrollTrendChart"></canvas></div></div>
+        <div class="card-ui"><h3 class="card-header text-sm font-bold text-slate-600 mb-4"><i class="fa fa-chart-line text-emerald-600"></i> SALES CONVERSION & BREAK-EVEN LINE</h3><div class="relative w-full" style="height: 250px;"><canvas id="salesPayrollChart"></canvas></div></div>
       </div>
 
       <div class="card-ui mb-6">
         <div class="flex justify-between items-center mb-4 border-b pb-3">
           <h3 class="text-sm font-bold text-slate-700 m-0"><i class="fa-solid fa-user-tie text-blue-600"></i> SALESPERSON PERFORMANCE KPI (รายบุคคล)</h3>
-          <div class="flex items-center gap-2">
-            <label class="text-xs font-bold text-slate-500">เลือกพนักงานขาย:</label>
-            <select id="salespersonFilter" onchange="loadSalespersonKPI()" class="border p-2 rounded bg-white text-sm font-semibold outline-none w-64 shadow-sm"></select>
+          <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-bold text-slate-500">คัดกรองตามห้าง/สาขา:</label>
+              <select id="branchFilterSelect" onchange="filterSalespersonListByBranch()" class="border p-2 rounded bg-white text-sm font-semibold outline-none w-48 shadow-sm"></select>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-bold text-slate-500">เลือกพนักงานขาย:</label>
+              <select id="salespersonFilter" onchange="loadSalespersonKPI()" class="border p-2 rounded bg-white text-sm font-semibold outline-none w-52 shadow-sm"></select>
+            </div>
           </div>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 transition-opacity duration-300" id="sales-kpi-result">
-          <div class="p-4 bg-slate-50 rounded-lg border text-center">
-            <p class="text-xs text-slate-500 font-bold mb-1">ห้าง/สาขาที่ดูแล (Branch)</p>
-            <h4 id="lbl-sales-branch" class="text-lg font-bold text-slate-800">-</h4>
-          </div>
-          <div class="p-4 bg-slate-50 rounded-lg border text-center">
-            <p class="text-xs text-slate-500 font-bold mb-1">ยอดขายเดือนนี้ (Actual)</p>
-            <h4 id="lbl-sales-actual" class="text-lg font-bold text-slate-800">0 ฿</h4>
-          </div>
-          <div class="p-4 bg-slate-50 rounded-lg border text-center">
-            <p class="text-xs text-slate-500 font-bold mb-1">เทียบเดือนก่อน (MoM Growth)</p>
-            <h4 id="lbl-sales-mom" class="text-lg font-black text-slate-800">0%</h4>
-          </div>
-          <div class="p-4 bg-slate-50 rounded-lg border text-center">
-            <p class="text-xs text-slate-500 font-bold mb-1">KPI Achievement / ประเมิน</p>
-            <h4 id="lbl-sales-kpi" class="text-lg font-black text-slate-800">0% <span id="lbl-sales-grade" class="text-sm">(-)</span></h4>
-          </div>
+          <div class="p-4 bg-slate-50 rounded-lg border text-center"><p class="text-xs text-slate-500 font-bold mb-1">ห้าง/สาขาที่ดูแล (Branch)</p><h4 id="lbl-sales-branch" class="text-lg font-bold text-slate-800">-</h4></div>
+          <div class="p-4 bg-slate-50 rounded-lg border text-center"><p class="text-xs text-slate-500 font-bold mb-1">ยอดขายเดือนนี้ (Actual)</p><h4 id="lbl-sales-actual" class="text-lg font-bold text-slate-800">0 ฿</h4></div>
+          <div class="p-4 bg-slate-50 rounded-lg border text-center"><p class="text-xs text-slate-500 font-bold mb-1">เทียบงวดเปรียบเทียบ (MoM Growth)</p><h4 id="lbl-sales-mom" class="text-lg font-black text-slate-800">0%</h4></div>
+          <div class="p-4 bg-slate-50 rounded-lg border text-center"><p class="text-xs text-slate-500 font-bold mb-1">KPI Achievement / ประเมินเกรด</p><h4 id="lbl-sales-kpi" class="text-lg font-black text-slate-800">0% <span id="lbl-sales-grade" class="text-sm">(-)</span></h4></div>
         </div>
+      </div>
+
+      <div class="card-ui mb-6 overflow-x-auto">
+          <h3 class="text-sm font-bold text-slate-700 mb-4"><i class="fa-solid fa-briefcase text-blue-800"></i> COMPANY PROFITABILITY STATEMENT & OPERATIONAL PAYROLL COST</h3>
+          <table class="data-table w-full">
+              <thead>
+                  <tr class="bg-slate-100 text-slate-700 text-xs uppercase border-b">
+                      <th>งวดบัญชี</th><th>ยอดขายบริษัท (Revenue)</th><th>กำไรขั้นต้น (GP 35%)</th><th>ค่าแรงพนักงานรวมทุกแผนก (All Payroll)</th><th>ค่า Incentive/Allowance</th><th>สัดส่วนค่าแรง/ยอดขาย (%)</th><th>กำไรสุทธิหลังหักค่าแรง (Net Profit)</th>
+                  </tr>
+              </thead>
+              <tbody id="companyProfitStatementTableBody" class="text-sm">
+                  <tr><td colspan="7" class="text-center text-slate-400 py-4">กำลังคำนวณงบดุลภาพรวมพนักงาน...</td></tr>
+              </tbody>
+          </table>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -223,11 +203,11 @@
             <div class="grid-form" style="grid-template-columns: 1.5fr 1.5fr;">
                 <div class="input-wrapper">
                     <label>เป้าหมายยอดขายประจำห้าง (Target Sales / บาท):</label>
-                    <input type="number" id="kpiTargetInput" placeholder="เช่น 25000000" min="0">
+                    <input type="number" id="kpiTargetInput" placeholder="เช่น 250000" min="0">
                 </div>
                 <div class="input-wrapper">
                     <label>ยอดขายที่ทำได้จริงหน้าห้าง (Actual Sales / บาท):</label>
-                    <input type="number" id="kpiActualInput" placeholder="เช่น 27200000" min="0">
+                    <input type="number" id="kpiActualInput" placeholder="เช่น 272000" min="0">
                 </div>
             </div>
             <button class="btn-ui" style="background-color: #d97706;" onclick="saveSalesRecordToSupabase()"><i class="fa-solid fa-cloud-arrow-up"></i> บันทึกยอดทีมเซลล์ขึ้นระบบ</button>
@@ -296,8 +276,6 @@
                   <option value="March 2026">March 2026</option><option value="April 2026">April 2026</option>
                   <option value="May 2026" selected>May 2026</option><option value="June 2026">June 2026</option>
                   <option value="July 2026">July 2026</option><option value="August 2026">August 2026</option>
-                  <option value="September 2026">September 2026</option><option value="October 2026">October 2026</option>
-                  <option value="November 2026">November 2026</option><option value="December 2026">December 2026</option>
               </select></div>
           </div>
           <button class="btn-ui" onclick="loadDualEmployeesSlips()"><i class="fa-solid fa-file-shield"></i> ประมวลผลสร้างสลิป</button>
@@ -319,39 +297,13 @@
               <label style="cursor:pointer; color: var(--primary);"><input type="radio" name="reportMode" value="OVERVIEW" checked onchange="toggleReportFilterMode()"> ดูภาพรวมทุกแผนก</label>
               <label style="cursor:pointer; color: var(--primary-light);"><input type="radio" name="reportMode" value="INDIVIDUAL" onchange="toggleReportFilterMode()"> เจาะลึกรายบุคคล (ยื่นภาษี)</label>
           </div>
-          
           <div class="grid-form" id="filterAreaOverview">
-              <div class="input-wrapper">
-                  <label>เลือกงวดประจำเดือน:</label>
-                  <select id="filterReportMonth" onchange="filterPayrollReportData()">
-                      <option value="ALL">-- แสดงทุกเดือน --</option>
-                  </select>
-              </div>
-              <div class="input-wrapper">
-                  <label>แผนก:</label>
-                  <select id="filterReportDept" onchange="filterPayrollReportData()">
-                      <option value="ALL">-- แสดงทุกแผนก --</option>
-                      <option value="SALES">SALES</option>
-                      <option value="LGT">LGT</option>
-                      <option value="ACC">ACC</option>
-                      <option value="HR">HR</option>
-                  </select>
-              </div>
+              <div class="input-wrapper"><label>เลือกงวดประจำเดือน:</label><select id="filterReportMonth" onchange="filterPayrollReportData()"><option value="ALL">-- แสดงทุกเดือน --</option></select></div>
+              <div class="input-wrapper"><label>แผนก:</label><select id="filterReportDept" onchange="filterPayrollReportData()"><option value="ALL">-- แสดงทุกแผนก --</option><option value="SALES">SALES</option><option value="LGT">LGT</option><option value="ACC">ACC</option><option value="HR">HR</option></select></div>
           </div>
-          
           <div class="grid-form" id="filterAreaIndividual" style="display: none;">
-              <div class="input-wrapper">
-                  <label>ชื่อพนักงาน:</label>
-                  <select id="filterReportEmployee" onchange="filterPayrollReportData()">
-                      <option value="">-- เลือก --</option>
-                  </select>
-              </div>
-              <div class="input-wrapper">
-                  <label>งวดเดือน:</label>
-                  <select id="filterReportEmployeeMonth" onchange="filterPayrollReportData()">
-                      <option value="ALL" selected>-- ทุกเดือน (รายปี) --</option>
-                  </select>
-              </div>
+              <div class="input-wrapper"><label>ชื่อพนักงาน:</label><select id="filterReportEmployee" onchange="filterPayrollReportData()"><option value="">-- เลือก --</option></select></div>
+              <div class="input-wrapper"><label>งวดเดือน:</label><select id="filterReportEmployeeMonth" onchange="filterPayrollReportData()"><option value="ALL" selected>-- ทุกเดือน (รายปี) --</option></select></div>
           </div>
       </div>
       <div class="card-ui overflow-auto">
@@ -375,6 +327,7 @@
     let cachedReportData = [];
     let loadedSlipsData = [];
     let localEmployeesCache = [];
+    let cachedTargetSalesRows = []; // แคชสำหรับระบบตัวกรองสาขาห้าง
 
     window.onload = function() { 
       loadDashboardData();   
@@ -393,21 +346,18 @@
 
     const normalize = (str) => String(str).replace(/\s+/g, ' ').trim().toLowerCase();
     function formatM(num) { return (num / 1000000).toFixed(2) + 'M'; }
-    function getArrow(val) { return val > 0 ? '<i class="fa fa-arrow-up text-green-500"></i>' : '<i class="fa fa-arrow-down text-red-500"></i>'; }
-    function getColor(val) { return val > 0 ? 'text-green-500' : 'text-red-500'; }
+    function getArrow(val) { return parseFloat(val) >= 0 ? '<i class="fa fa-arrow-up text-green-500"></i>' : '<i class="fa fa-arrow-down text-red-500"></i>'; }
+    function getColor(val) { return parseFloat(val) >= 0 ? 'text-green-500' : 'text-red-500'; }
 
-    // --- 2. ส่วนดึงข้อมูลเพื่อประมวลผลแดชบอร์ดหลัก (CEO Dashboard) ---
+    // --- 2. ส่วนประมวลผล CEO Dashboard & ตารางกำไรขาดทุนภาพรวมพนักงานทุกแผนก ---
     async function loadDashboardData() {
       document.getElementById('error-container').innerHTML = '';
-      document.getElementById('kpi-container').innerHTML = '<div class="card-ui p-6 text-center animate-pulse text-blue-500 col-span-5"><i class="fa fa-spinner fa-spin mr-2"></i>กำลังดึงข้อมูลเรียลไทม์และเขียนประมวลผล...</div>';
+      document.getElementById('kpi-container').innerHTML = '<div class="card-ui p-6 text-center animate-pulse text-blue-500 col-span-5"><i class="fa fa-spinner fa-spin mr-2"></i>กำลังประมวลผลงบดุลรวมพนักงานทุกแผนก...</div>';
       Object.keys(charts).forEach(key => { if(charts[key]) charts[key].destroy(); });
 
       try {
         const { data: summaryData, error: summaryErr } = await supabaseClient.from('monthly_payroll_summary').select('*');
         if (summaryErr) throw summaryErr;
-
-        const { data: kpiRecords, error: kpiErr } = await supabaseClient.from('company_kpi_records').select('*');
-        if (kpiErr) throw kpiErr;
 
         const { data: salesRecords, error: salesErr } = await supabaseClient.from('sales_records').select('*');
         if (salesErr) throw salesErr;
@@ -418,22 +368,17 @@
         const empMetaMap = {};
         rawEmployees.forEach(e => { empMetaMap[String(e.id).trim()] = e; });
 
-        // รวมรายชื่อช่วงงวดเดือนทั้งหมดเพื่อปั่น Dropdown ข้อมูล
+        // รวบรวมงวดเดือนจากฐานข้อมูล
         const periodsSet = new Set();
         summaryData.forEach(item => { if(item.payroll_month) periodsSet.add(String(item.payroll_month).trim()); });
-        kpiRecords.forEach(item => { if(item.month_period) periodsSet.add(String(item.month_period).trim()); });
         salesRecords.forEach(item => { if(item.month_period) periodsSet.add(String(item.month_period).trim()); });
 
         let dropdownPeriods = Array.from(periodsSet);
-        if (dropdownPeriods.length === 0) {
-          dropdownPeriods = ["May 2026", "April 2026", "March 2026", "February 2026"];
-        } else {
-          dropdownPeriods.sort((a, b) => new Date(b) - new Date(a));
-        }
+        if (dropdownPeriods.length === 0) dropdownPeriods = ["May 2026", "April 2026", "March 2026"];
+        dropdownPeriods.sort((a, b) => new Date(b) - new Date(a));
         
         const targetSelect = document.getElementById('targetMonthFilter');
         const compareSelect = document.getElementById('compareMonthFilter');
-        
         const currentTargetVal = targetSelect.value || dropdownPeriods[0];
         const currentCompareVal = compareSelect.value || (dropdownPeriods[1] || dropdownPeriods[0]);
 
@@ -443,45 +388,74 @@
           compareSelect.add(new Option(m, m, false, m === currentCompareVal));
         });
 
+        // คัดกรองข้อมูลเพื่อหาค่าแรงพนักงานรวมทุกแผนก (ACC, LGT, HR, SALES) ตามคำขอ
         const targetRowsAll = summaryData.filter(r => r.payroll_month === currentTargetVal);
         const compareRowsAll = summaryData.filter(r => r.payroll_month === currentCompareVal);
 
         const targetRowsSales = targetRowsAll.filter(r => empMetaMap[String(r.employee_id).trim()]?.is_sales === true);
         const compareRowsSales = compareRowsAll.filter(r => empMetaMap[String(r.employee_id).trim()]?.is_sales === true);
 
-        const tSalesHeadcount = targetRowsSales.length;
+        // คำนวณค่าแรงแยกกลุ่ม
         const tSalesPayroll = targetRowsSales.reduce((sum, r) => sum + (Number(r.net_amount) || 0), 0);
-        const tSalesBasic = targetRowsSales.reduce((sum, r) => sum + (Number(r.basic_salary) || 0), 0);
-        const tSalesOt = targetRowsSales.reduce((sum, r) => sum + (Number(r.ot_earnings) || 0), 0);
+        const tTotalPayrollAllDept = targetRowsAll.reduce((sum, r) => sum + (Number(r.net_amount) || 0), 0);
+        const cTotalPayrollAllDept = compareRowsAll.reduce((sum, r) => sum + (Number(r.net_amount) || 0), 0) || 1;
 
-        const cSalesHeadcount = compareRowsSales.length || 1;
-        const cSalesPayroll = compareRowsSales.reduce((sum, r) => sum + (Number(r.net_amount) || 0), 0) || 1;
+        const payrollGrowth = (((tTotalPayrollAllDept - cTotalPayrollAllDept) / cTotalPayrollAllDept) * 100).toFixed(1);
 
-        const headcountGrowth = (((tSalesHeadcount - cSalesHeadcount) / cSalesHeadcount) * 100).toFixed(1);
-        const payrollGrowth = (((tSalesPayroll - cSalesPayroll) / cSalesPayroll) * 100).toFixed(1);
-
+        // คำนวณยอดขายรวมรายห้างสาขาของทีมเซลล์
         const currentMonthSalesRows = salesRecords.filter(s => s.month_period === currentTargetVal);
         const prevMonthSalesRows = salesRecords.filter(s => s.month_period === currentCompareVal);
 
-        const actualSalesRevenue = currentMonthSalesRows.length > 0 ? currentMonthSalesRows.reduce((sum, s) => sum + Number(s.actual_sales), 0) : (tSalesPayroll * 7.2);
+        const actualSalesRevenue = currentMonthSalesRows.length > 0 ? currentMonthSalesRows.reduce((sum, s) => sum + Number(s.actual_sales), 0) : (tSalesPayroll * 7.5);
         const prevSalesRevenue = prevMonthSalesRows.length > 0 ? prevMonthSalesRows.reduce((sum, s) => sum + Number(s.actual_sales), 0) : (cSalesPayroll * 7.0);
         const salesGrowth = prevSalesRevenue > 0 ? (((actualSalesRevenue - prevSalesRevenue) / prevSalesRevenue) * 100).toFixed(1) : "0.0";
 
-        const grossProfit = actualSalesRevenue * 0.35; 
-        const payRatioVal = actualSalesRevenue > 0 ? ((tSalesPayroll / actualSalesRevenue) * 100).toFixed(1) : 0;
-        const payRatioPrev = prevSalesRevenue > 0 ? ((cSalesPayroll / prevSalesRevenue) * 100).toFixed(1) : 0;
+        const grossProfit = actualSalesRevenue * 0.35; // อิงตามเกณฑ์กำไรขั้นต้น 35% ของบริษัท
+        const payRatioVal = actualSalesRevenue > 0 ? ((tTotalPayrollAllDept / actualSalesRevenue) * 100).toFixed(1) : 0;
+        const payRatioPrev = prevSalesRevenue > 0 ? ((cTotalPayrollAllDept / prevSalesRevenue) * 100).toFixed(1) : 0;
         const payRatioDiff = (payRatioVal - payRatioPrev).toFixed(1);
 
         const vsText = `<span class="text-[10px] text-slate-400 font-normal ml-1">vs ${currentCompareVal}</span>`;
 
+        // แสดงผลแผง KPI หลักด้านบน
         document.getElementById('kpi-container').innerHTML = `
-          <div class="card-ui p-4 flex flex-col items-center border-t-4 border-blue-500"><p class="text-xs text-slate-500 font-bold mb-1">Sales Headcount (เซลล์)</p><h2 class="text-2xl font-black text-slate-800">${tSalesHeadcount.toLocaleString()} คน</h2><p class="text-sm ${getColor(headcountGrowth)} mt-1">${headcountGrowth}% ${getArrow(headcountGrowth)} ${vsText}</p></div>
-          <div class="card-ui p-4 flex flex-col items-center border-t-4 border-green-500"><p class="text-xs text-slate-500 font-bold mb-1">Sales Team Cost</p><h2 class="text-2xl font-black text-slate-800">${formatM(tSalesPayroll)}</h2><p class="text-sm ${getColor(payrollGrowth)} mt-1">${payrollGrowth}% ${getArrow(payrollGrowth)} ${vsText}</p></div>
-          <div class="card-ui p-4 flex flex-col items-center border-t-4 border-purple-500"><p class="text-xs text-slate-500 font-bold mb-1">Sales Payroll % to Sales</p><h2 class="text-2xl font-black text-slate-800">${payRatioVal}%</h2><p class="text-sm ${getColor(-payRatioDiff)} mt-1">${Math.abs(payRatioDiff)}% ${getArrow(-payRatioDiff)} ${vsText}</p></div>
-          <div class="card-ui p-4 flex flex-col items-center border-t-4 border-orange-500"><p class="text-xs text-slate-500 font-bold mb-1">Sales Rev (รายห้างรวม)</p><h2 class="text-2xl font-black text-slate-800">${formatM(actualSalesRevenue)}</h2><p class="text-sm ${getColor(salesGrowth)} mt-1">${salesGrowth}% ${getArrow(salesGrowth)} ${vsText}</p></div>
-          <div class="card-ui p-4 flex flex-col items-center border-t-4 border-emerald-500"><p class="text-xs text-slate-500 font-bold mb-1">Gross Profit (35%)</p><h2 class="text-2xl font-black text-slate-800">${formatM(grossProfit)}</h2><p class="text-sm ${getColor(salesGrowth)} mt-1">${salesGrowth}% ${getArrow(salesGrowth)} ${vsText}</p></div>
+          <div class="card-ui p-4 flex flex-col items-center border-t-4 border-blue-500"><p class="text-xs text-slate-500 font-bold mb-1">Company Headcount (รวม)</p><h2 class="text-2xl font-black text-slate-800">${targetRowsAll.length} คน</h2><p class="text-xs text-slate-400 mt-1">ทีมเซลล์ PC: ${tSalesHeadcount} คน</p></div>
+          <div class="card-ui p-4 flex flex-col items-center border-t-4 border-green-500"><p class="text-xs text-slate-500 font-bold mb-1">Total All Payroll Cost</p><h2 class="text-2xl font-black text-slate-800">${formatM(tTotalPayrollAllDept)}</h2><p class="text-sm ${getColor(payrollGrowth)} mt-1">${payrollGrowth}% ${getArrow(payrollGrowth)} ${vsText}</p></div>
+          <div class="card-ui p-4 flex flex-col items-center border-t-4 border-purple-500"><p class="text-xs text-slate-500 font-bold mb-1">All Payroll % to Sales</p><h2 class="text-2xl font-black text-slate-800">${payRatioVal}%</h2><p class="text-sm ${getColor(payRatioDiff)} mt-1">${Math.abs(payRatioDiff)}% ${getArrow(payRatioDiff)} ${vsText}</p></div>
+          <div class="card-ui p-4 flex flex-col items-center border-t-4 border-orange-500"><p class="text-xs text-slate-500 font-bold mb-1">Total Mall Revenue</p><h2 class="text-2xl font-black text-slate-800">${formatM(actualSalesRevenue)}</h2><p class="text-sm ${getColor(salesGrowth)} mt-1">${salesGrowth}% ${getArrow(salesGrowth)} ${vsText}</p></div>
+          <div class="card-ui p-4 flex flex-col items-center border-t-4 border-emerald-500"><p class="text-xs text-slate-500 font-bold mb-1">Net Margin (หลังหักค่าแรง)</p><h2 class="text-2xl font-black text-slate-800">${formatM(grossProfit - tTotalPayrollAllDept)}</h2><p class="text-xs text-slate-400 mt-1">GP 35%: ${formatM(grossProfit)}</p></div>
         `;
 
+        // ---------------- เรนเดอร์กราฟทั้ง 2 รูปตามโครงสร้างใหม่ ----------------
+        charts.payroll = new Chart(document.getElementById('payrollTrendChart'), { type: 'bar', data: { labels: [currentCompareVal, currentTargetVal], datasets: [{ label: 'Total Company Revenue', data: [prevSalesRevenue, actualSalesRevenue], backgroundColor: '#1e3a8a' }, { label: 'All Dept Payroll Cost', data: [cTotalPayrollAllDept, tTotalPayrollAllDept], backgroundColor: '#dc2626' }] }, options: { responsive: true, maintainAspectRatio: false } });
+        charts.sales = new Chart(document.getElementById('salesPayrollChart'), { type: 'line', data: { labels: [currentCompareVal, currentTargetVal], datasets: [{ label: 'Gross Profit Line (35%)', data: [prevSalesRevenue * 0.35, grossProfit], borderColor: '#16a34a', tension: 0.2 }, { label: 'Total Payroll Expenses', data: [cTotalPayrollAllDept, tTotalPayrollAllDept], borderColor: '#2563eb', tension: 0.2 }] }, options: { responsive: true, maintainAspectRatio: false } });
+
+        // ประมวลผลสร้างตารางวิเคราะห์งบกำไรขาดทุนพนักงานทุกแผนก
+        const statementTbody = document.getElementById('companyProfitStatementTableBody');
+        statementTbody.innerHTML = '';
+        
+        dropdownPeriods.forEach(p => {
+            const pRows = summaryData.filter(r => r.payroll_month === p);
+            const pSalesRows = salesRecords.filter(s => s.month_period === p);
+            
+            const pPayrollSum = pRows.reduce((sum, r) => sum + Number(r.net_amount), 0);
+            const pSalesSum = pSalesRows.length > 0 ? pSalesRows.reduce((sum, s) => sum + Number(s.actual_sales), 0) : (pPayrollSum * 5.5);
+            const pGp = pSalesSum * 0.35;
+            const pRatio = pSalesSum > 0 ? ((pPayrollSum / pSalesSum) * 100).toFixed(1) : 0;
+            const pNetProfit = pGp - pPayrollSum;
+
+            statementTbody.innerHTML += `<tr class="hover:bg-white/40 transition-colors">
+                <td class="p-3 font-bold text-slate-700">${p}</td>
+                <td class="p-3">฿${pSalesSum.toLocaleString()}</td>
+                <td class="p-3 text-emerald-700 font-semibold">฿${pGp.toLocaleString()}</td>
+                <td class="p-3 text-blue-900 font-semibold">฿${pPayrollSum.toLocaleString()}</td>
+                <td class="p-3 text-slate-500">฿${pRows.reduce((sum,r)=>sum+(Number(r.ot_earnings)||0), 0).toLocaleString()}</td>
+                <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-bold bg-blue-50 text-blue-700">${pRatio}%</span></td>
+                <td class="p-3 font-bold ${pNetProfit >= 0 ? 'text-green-600' : 'text-red-600'}">฿${pNetProfit.toLocaleString()}</td>
+            </tr>`;
+        });
+
+        // สรุปการแบ่งกลุ่มสาขาห้างของทีมเซลล์ PC
         const branchGroup = {};
         targetRowsSales.forEach(r => {
           const bName = empMetaMap[String(r.employee_id).trim()]?.assigned_branch || 'ไม่ระบุสาขา';
@@ -491,28 +465,22 @@
           branchGroup[bName].payrollCost += Number(r.net_amount);
         });
 
-        charts.payroll = new Chart(document.getElementById('payrollTrendChart'), { type: 'bar', data: { labels: [currentCompareVal, currentTargetVal], datasets: [{ label: 'Sales Base Salary', data: [cSalesPayroll * 0.9, tSalesBasic], backgroundColor: '#2563eb' }, { label: 'Sales OT Amount', data: [cSalesPayroll * 0.1, tSalesOt], backgroundColor: '#16a34a' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } } });
-        charts.sales = new Chart(document.getElementById('salesPayrollChart'), { type: 'line', data: { labels: [currentCompareVal, currentTargetVal], datasets: [{ label: 'Total Mall Sales', data: [prevSalesRevenue, actualSalesRevenue], borderColor: '#2563eb', tension: 0.3 }, { label: 'Sales Payroll Cost', data: [cSalesPayroll, tSalesPayroll], borderColor: '#16a34a', tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: false } });
+        if(charts.donut) charts.donut.destroy();
         charts.donut = new Chart(document.getElementById('headcountChart'), { type: 'doughnut', data: { labels: Object.keys(branchGroup).length > 0 ? Object.keys(branchGroup) : ['ไม่มีข้อมูลเซลล์'], datasets: [{ data: Object.keys(branchGroup).length > 0 ? Object.values(branchGroup).map(b => b.headcount) : [0], backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4'], cutout: '70%' }] }, options: { responsive: true, maintainAspectRatio: false } });
 
         const branchTbody = document.querySelector('#branchTable tbody');
         branchTbody.innerHTML = '';
         
-        const uniqueBranches = Object.keys(branchGroup);
-        if(uniqueBranches.length === 0) {
-          branchTbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-slate-500">ไม่มีข้อมูลการกระจายตัวของทีมเซลตามห้างในงวดนี้</td></tr>';
-        } else {
-          uniqueBranches.forEach(b => {
+        Object.keys(branchGroup).forEach(b => {
             const bInfo = branchGroup[b];
             const matchRecord = currentMonthSalesRows.find(s => s.branch_name === b);
             const subSales = matchRecord ? Number(matchRecord.actual_sales) : (bInfo.payrollCost * 7.2);
             const payPercent = subSales > 0 ? ((bInfo.payrollCost / subSales) * 100) : 0;
-            
             let autoScore = 'B'; let scoreBg = 'bg-blue-500';
+
             if (payPercent < 12) { autoScore = 'A'; scoreBg = 'bg-green-500'; }
             else if (payPercent < 15) { autoScore = 'B'; scoreBg = 'bg-blue-500'; }
-            else if (payPercent < 18) { autoScore = 'C'; scoreBg = 'bg-yellow-500'; }
-            else { autoScore = 'D'; scoreBg = 'bg-red-500'; }
+            else { autoScore = 'C'; scoreBg = 'bg-yellow-500'; }
 
             branchTbody.innerHTML += `<tr>
                 <td class="font-bold text-slate-700"><i class="fa-solid fa-shop text-blue-500 mr-1"></i> ${b}</td>
@@ -522,17 +490,94 @@
                 <td><span class="px-2 py-1 rounded text-xs font-bold bg-blue-50 text-blue-800">${payPercent.toFixed(1)}%</span></td>
                 <td><span class="px-3 py-1 rounded text-white text-xs font-bold ${scoreBg}">${autoScore}</span></td>
             </tr>`;
-          });
-        }
+        });
 
-        loadSalespersonDropdown(targetRowsSales);
+        // คัดแยกรายชื่อห้างส่งเข้าตัวกรอง Filter ห้างรายบุคคล
+        cachedTargetSalesRows = targetRowsSales;
+        populateBranchFilterDropdown(currentMonthSalesRows);
 
       } catch (err) {
         document.getElementById('error-container').innerHTML = `<div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded"><p class="text-sm text-red-700">${err.message || err}</p></div>`;
       }
     }
 
-    // --- 3. ส่วนฟังก์ชันบันทึกข้อมูล KPI ยอดขายห้างของพนักงานขาย (CEO Settings) ---
+    // --- 3. ส่วนสกัดและควบคุมระบบตัวกรองห้างสาขาแยกพนักงานขาย (Branch Filter Engine) ---
+    function populateBranchFilterDropdown(currentMonthSalesRows) {
+        const branchSelect = document.getElementById('branchFilterSelect');
+        const savedVal = branchSelect.value;
+        branchSelect.innerHTML = '<option value="ALL">-- แสดงพนักงานทุกห้าง --</option>';
+        
+        const branchSet = new Set();
+        currentMonthSalesRows.forEach(s => { if(s.branch_name) branchSet.add(s.branch_name.trim()); });
+        localEmployeesCache.forEach(e => { if(e.is_sales && e.assigned_branch) branchSet.add(e.assigned_branch.trim()); });
+
+        branchSet.forEach(b => {
+            branchSelect.add(new Option(b, b, false, b === savedVal));
+        });
+        filterSalespersonListByBranch();
+    }
+
+    function filterSalespersonListByBranch() {
+        const bFilter = document.getElementById('branchFilterSelect').value;
+        const salespersonSelect = document.getElementById('salespersonFilter');
+        const savedEmpId = salespersonSelect.value;
+        salespersonSelect.innerHTML = '';
+
+        // คัดกรองรายชื่อเซลล์ PC หน้าห้างตามเงื่อนไขสาขาที่ผู้บริหารเลือก
+        const filteredEmployees = localEmployeesCache.filter(e => {
+            if(!e.is_sales) return false;
+            return (bFilter === 'ALL' || String(e.assigned_branch).trim() === bFilter.trim());
+        });
+
+        if (filteredEmployees.length === 0) {
+            salespersonSelect.add(new Option('-- ไม่พบรายชื่อเซลประจำสาขานี้ --', ''));
+            document.getElementById('sales-kpi-result').style.opacity = '0.4';
+            return;
+        }
+
+        document.getElementById('sales-kpi-result').style.opacity = '1';
+        filteredEmployees.forEach(e => {
+            salespersonSelect.add(new Option(`${e.name} (${e.assigned_branch || 'ไม่ระบุห้าง'})`, e.id, false, String(e.id) === savedEmpId));
+        });
+        loadSalespersonKPI();
+    }
+
+    async function loadSalespersonKPI() {
+      const empId = document.getElementById('salespersonFilter').value;
+      const targetM = document.getElementById('targetMonthFilter').value;
+      const compareM = document.getElementById('compareMonthFilter').value;
+      if(!empId) return;
+
+      try {
+        const { data: row } = await supabaseClient.from('monthly_payroll_summary').select('*').eq('employee_id', empId).eq('payroll_month', targetM).single();
+        const { data: targetRecord } = await supabaseClient.from('sales_records').select('*').eq('salesperson_id', empId).eq('month_period', targetM).maybeSingle();
+        const { data: compareRecord } = await supabaseClient.from('sales_records').select('*').eq('salesperson_id', empId).eq('month_period', compareM).maybeSingle();
+        const { data: empMeta } = await supabaseClient.from('employees').select('assigned_branch').eq('id', empId).single();
+        
+        const actualSales = targetRecord ? Number(targetRecord.actual_sales) : (row ? Number(row.net_amount) * 7.2 : 0);
+        const targetSales = targetRecord ? Number(targetRecord.target_sales) : (row ? Number(row.basic_salary) * 7.5 : 0);
+        const prevSales = compareRecord ? Number(compareRecord.actual_sales) : (compareM === targetM ? actualSales : 0);
+
+        const kpiAchievement = targetSales > 0 ? ((actualSales / targetSales) * 100).toFixed(1) : "0.0";
+        const momGrowth = prevSales > 0 ? (((actualSales - prevSales) / prevSales) * 100).toFixed(1) : "0.0";
+
+        let grade = 'B'; let colorClass = 'text-blue-600';
+        if (parseFloat(kpiAchievement) >= 100) { grade = 'A'; colorClass = 'text-green-600'; }
+        else if (parseFloat(kpiAchievement) < 85) { grade = 'C'; colorClass = 'text-red-600'; }
+
+        document.getElementById('lbl-sales-branch').textContent = targetRecord ? targetRecord.branch_name : ((empMeta && empMeta.assigned_branch) ? empMeta.assigned_branch : 'ไม่ระบุห้าง');
+        document.getElementById('lbl-sales-actual').textContent = "฿" + actualSales.toLocaleString();
+        
+        const arrow = parseFloat(momGrowth) >= 0 ? '▲' : '▼';
+        const momColor = parseFloat(momGrowth) >= 0 ? 'text-green-600' : 'text-red-600';
+        document.getElementById('lbl-sales-mom').innerHTML = `<span class="${momColor}">${arrow} ${Math.abs(momGrowth)}%</span>`;
+        document.getElementById('lbl-sales-kpi').innerHTML = `${kpiAchievement}% <span class="text-sm font-bold ${colorClass}">[เกรด ${grade}]</span>`;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // --- 4. ส่วนฟังก์ชันกรอกบันทึกข้อมูลเป้าหมายรายห้างรายเซลล์ (CEO Settings) ---
     async function saveSalesRecordToSupabase() {
         const month_period = document.getElementById('kpiPeriodMonth').value;
         const salesperson_id = document.getElementById('kpiSalespersonSelect').value;
@@ -541,18 +586,18 @@
         const actual_sales = parseFloat(document.getElementById('kpiActualInput').value) || 0;
 
         if (!salesperson_id || !branch_name || target_sales <= 0 || actual_sales <= 0) {
-            alert("กรุณาเลือกพนักงานขายและป้อนข้อมูลตัวเลขงบประมาณเป้าหมาย/ยอดขายจริงให้ครบถ้วนครับ");
+            alert("กรุณาตรวจสอบรายละเอียดและระบุยอดงบประมาณให้ครบถ้วนก่อนส่งข้อมูลครับ");
             return;
         }
 
         document.getElementById('kpiLoader').style.display = 'flex';
 
         try {
-            // ระบบ Upsert ป้องกันประวัติซ้ำในงวดเดียวกัน
+            // ใช้คำสั่ง upsert ล็อกความปลอดภัยระดับรหัสงวดเดือนคู่กับรหัสพนักงานขาย ป้องกันแถวเบิ้ลซ้ำซ้อน
             const { error } = await supabaseClient.from('sales_records').upsert([{ month_period, salesperson_id, branch_name, target_sales, actual_sales }], { onConflict: 'month_period,salesperson_id' });
             if (error) throw error;
 
-            alert(`🎉 บันทึกประวัติและเป้าหมายยอดขายประจำห้างของเซลเรียบร้อย! (ระบบเคลียร์ค่าซ้ำให้อัตโนมัติ)`);
+            alert(`🎉 ซิงค์เป้าหมายงบประมาณของสาขา ${branch_name} ขึ้นระบบคลาวด์สำเร็จ!`);
             document.getElementById('kpiTargetInput').value = '';
             document.getElementById('kpiActualInput').value = '';
             loadCompanyKPIHistoryList();
@@ -566,7 +611,7 @@
 
     async function loadCompanyKPIHistoryList() {
         const tbody = document.getElementById('kpiHistoryTableBody');
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">กำลังดึงข้อมูลประวัติยอดขายPC...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">กำลังดึงข้อมูลประวัติยอดขายจากระบบจริง...</td></tr>';
 
         try {
             const { data: salesRecords, error } = await supabaseClient.from('sales_records').select('*').order('month_period', { ascending: false });
@@ -574,7 +619,7 @@
 
             tbody.innerHTML = '';
             if (!salesRecords || salesRecords.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-slate-400 py-4">ยังไม่เคยมีรายการคีย์เป้าหมายทีมเซลล์ในตารางนี้</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-slate-400 py-4">ยังไม่พบรายการคีย์เป้าหมายทีมเซลล์ในระบบคลาวด์</td></tr>';
                 return;
             }
 
@@ -596,7 +641,7 @@
                 </tr>`;
             });
         } catch (err) {
-            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-4">เออเร่อ: ${err.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-red-500 py-4">ผิดพลาด: ${err.message}</td></tr>`;
         }
     }
 
@@ -616,72 +661,6 @@
         const empId = document.getElementById('kpiSalespersonSelect').value;
         const matchEmp = localEmployeesCache.find(e => String(e.id) === String(empId));
         document.getElementById('kpiBranchInput').value = matchEmp ? (matchEmp.assigned_branch || 'ไม่ระบุห้าง') : '';
-    }
-
-    // --- 4. ส่วนตัวเลือกพนักงานขายในแดชบอร์ดรายบุคคล (ตัด Bug รายชื่อเบิ้ลซ้ำซ้อนสำเร็จ) ---
-    function loadSalespersonDropdown(targetRowsSales) {
-      const select = document.getElementById('salespersonFilter');
-      const savedSelVal = select.value;
-      select.innerHTML = '';
-      
-      if(targetRowsSales.length === 0) {
-        select.innerHTML = '<option value="">-- ไม่พบรายการทีมเซลล์ในเดือนนี้ --</option>';
-        return;
-      }
-      
-      // ลูปคัดกรองล้างชื่อและไอดีพนักงานซ้ำซ้อนออกไปให้เหลือบรรทัดเดียวสะอาดตา
-      const uniqueEmployees = [];
-      const mapCheck = new Set();
-      
-      targetRowsSales.forEach(r => {
-        const empIdClean = String(r.employee_id).trim();
-        if(!mapCheck.has(empIdClean)) {
-          mapCheck.add(empIdClean);
-          uniqueEmployees.push(r);
-        }
-      });
-      
-      uniqueEmployees.forEach(r => {
-        select.add(new Option(r.name, r.employee_id, false, r.employee_id === savedSelVal));
-      });
-      loadSalespersonKPI(); // สั่งประมวลผลคำนวณการ์ดตัวเลขด้านล่างทันที
-    }
-
-    async function loadSalespersonKPI() {
-      const empId = document.getElementById('salespersonFilter').value;
-      const targetM = document.getElementById('targetMonthFilter').value;
-      const compareM = document.getElementById('compareMonthFilter').value;
-      if(!empId) return;
-
-      try {
-        const { data: row } = await supabaseClient.from('monthly_payroll_summary').select('*').eq('employee_id', empId).eq('payroll_month', targetM).single();
-        const { data: targetRecord } = await supabaseClient.from('sales_records').select('*').eq('salesperson_id', empId).eq('month_period', targetM).maybeSingle();
-        const { data: compareRecord } = await supabaseClient.from('sales_records').select('*').eq('salesperson_id', empId).eq('month_period', compareM).maybeSingle();
-        const { data: empMeta } = await supabaseClient.from('employees').select('assigned_branch').eq('id', empId).single();
-        
-        // กฎการเชื่อมโยง: ยอดคีย์จริงจะแสดงผลก่อนเสมอ หากไม่มีให้คำนวณถอดสัดส่วนรายได้เฉลี่ย (Fallback)
-        const actualSales = targetRecord ? Number(targetRecord.actual_sales) : (row ? Number(row.net_amount) * 7.2 : 0);
-        const targetSales = targetRecord ? Number(targetRecord.target_sales) : (row ? Number(row.basic_salary) * 7.5 : 0);
-        const prevSales = compareRecord ? Number(compareRecord.actual_sales) : (compareM === targetM ? actualSales : 0);
-
-        const kpiAchievement = targetSales > 0 ? ((actualSales / targetSales) * 100).toFixed(1) : "0.0";
-        const momGrowth = prevSales > 0 ? (((actualSales - prevSales) / prevSales) * 100).toFixed(1) : "0.0";
-
-        let grade = 'B'; let colorClass = 'text-blue-600';
-        if (parseFloat(kpiAchievement) >= 100) { grade = 'A'; colorClass = 'text-green-600'; }
-        else if (parseFloat(kpiAchievement) < 85) { grade = 'C'; colorClass = 'text-red-600'; }
-
-        document.getElementById('lbl-sales-branch').textContent = targetRecord ? targetRecord.branch_name : ((empMeta && empMeta.assigned_branch) ? empMeta.assigned_branch : 'ไม่ระบุห้าง');
-        document.getElementById('lbl-sales-actual').textContent = actualSales.toLocaleString() + ' ฿';
-        
-        const arrow = parseFloat(momGrowth) >= 0 ? '▲' : '▼';
-        const momColor = parseFloat(momGrowth) >= 0 ? 'text-green-600' : 'text-red-600';
-        document.getElementById('lbl-sales-mom').innerHTML = `<span class="${momColor}">${arrow} ${Math.abs(momGrowth)}%</span>`;
-        
-        document.getElementById('lbl-sales-kpi').innerHTML = `${kpiAchievement}% <span class="text-sm font-bold ${colorClass}">[เกรด ${grade}]</span>`;
-      } catch (e) {
-        console.error("Error loading salesperson KPI:", e);
-      }
     }
 
     // --- 5. ส่วนระบบฐานข้อมูลพนักงาน ---
@@ -705,11 +684,6 @@
         const tbody = document.getElementById('empTableBody'); 
         tbody.innerHTML = "";
 
-        if(localEmployeesCache.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">ยังไม่มีรายชื่อพนักงานในระบบ Supabase</td></tr>';
-          return;
-        }
-
         localEmployeesCache.forEach(e => {
           const text = `[รหัส ${e.id}] ${e.name} (${e.dept})`;
           d1.innerHTML += `<option value="${e.id}">${text}</option>`;
@@ -725,11 +699,9 @@
             : '<span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs rounded">พนักงานทั่วไป</span>';
 
           tbody.innerHTML += `<tr>
-            <td><strong>${e.id}</strong></td>
-            <td>${e.name}</td>
+            <td><strong>${e.id}</strong></td><td>${e.name}</td>
             <td><span class="text-blue-600 font-bold">${e.dept}</span> / ${e.position}</td>
-            <td>${typeTag}</td>
-            <td class="font-semibold text-slate-700">${e.assigned_branch || '-'}</td>
+            <td>${typeTag}</td><td class="font-semibold text-slate-700">${e.assigned_branch || '-'}</td>
             <td>${Number(e.salary).toLocaleString()} ฿</td>
             <td><button class="px-2 py-1 bg-red-100 text-red-600 border border-red-200 text-xs rounded hover:bg-red-200 cursor-pointer" onclick="triggerDeleteEmp('${e.id}')"><i class="fa-solid fa-trash-can"></i></button></td>
           </tr>`;
@@ -751,17 +723,12 @@
       const court_deduct = parseFloat(document.getElementById('empCourt').value) || 0;
       const student_loan_deduct = parseFloat(document.getElementById('empStudentLoan').value) || 0;
 
-      if(!id || !name || salary <= 0) { 
-        alert('กรุณากรอกรหัสพนักงาน ชื่อ และเงินเดือนให้ครบถ้วนก่อนครับ'); 
-        return; 
-      }
-
+      if(!id || !name || salary <= 0) { alert('กรุณากรอกข้อมูลสำคัญให้ครบถ้วนก่อนครับ'); return; }
       document.getElementById('empLoader').style.display = 'flex';
 
       try {
         const { error } = await supabaseClient.from('employees').upsert([{ id, name, dept, position, salary, bank_acc, is_sales, assigned_branch, court_deduct, student_loan_deduct }]);
         if (error) throw error;
-
         alert('บันทึกข้อมูลพนักงานลง Supabase เรียบร้อย!');
         document.getElementById('empId').value = '';
         document.getElementById('empName').value = '';
@@ -788,11 +755,10 @@
       }
     }
 
-    // --- 6. ระบบนำเข้า Log และคำนวณประวัติเวลา (หักเข้า-ออก และทำโอทีเกิน 30 นาที) ---
+    // --- 6. ระบบนำเข้า Log และคำนวณประวัติเวลา ---
     async function importLogs() {
       const rawText = document.getElementById('rawFingerprintText').value.trim();
       if(!rawText) { alert('กรุณาวางข้อความดิบประวัติการสแกนนิ้วมือก่อนครับ'); return; }
-      
       document.getElementById('scanLoader').style.display = 'flex';
 
       try {
@@ -801,20 +767,14 @@
         const regex = /^(\d+)\s+([A-Za-z\s]+?)([A-Z]{3,})\s*(\d{1,2}\/\d{1,2}\/\d{4})(.*)$/;
 
         for (let line of lines) {
-          line = line.trim();
-          if (!line) continue;
+          line = line.trim(); if (!line) continue;
           const match = line.match(regex);
           if (match) {
-            const rawEmpId = match[1].trim();
-            const dateStr = match[4].trim();
-            const timesStr = match[5].trim();
+            const rawEmpId = match[1].trim(); const dateStr = match[4].trim(); const timesStr = match[5].trim();
             const times = timesStr.match(/\d{1,2}:\d{2}/g) || [];
             if (times.length === 0) continue;
-            
             const groupKey = rawEmpId + "_" + dateStr;
-            if (!groupedAttendance[groupKey]) {
-              groupedAttendance[groupKey] = { empId: rawEmpId, dateStr: dateStr, allTimes: [] };
-            }
+            if (!groupedAttendance[groupKey]) groupedAttendance[groupKey] = { empId: rawEmpId, dateStr: dateStr, allTimes: [] };
             groupedAttendance[groupKey].allTimes = groupedAttendance[groupKey].allTimes.concat(times);
           }
         }
@@ -840,42 +800,32 @@
             const lastOutMins = timeMinutes[timeMinutes.length - 1].totalMins;
             if (lastOutMins > 1020) { 
               let rawOt = lastOutMins - 1020;
-              if (lateMinutes > 0) rawOt = rawOt - lateMinutes; // หักนาทีสายออกจากยอดล่วงเวลาตามกฎเกณฑ์
-              if (rawOt > 30) otMinutes = rawOt; // เงื่อนไข: โอทีต้องมากกว่า 30 นาทีถึงจะถูกนับเป็น OT
+              if (lateMinutes > 0) rawOt = rawOt - lateMinutes; 
+              if (rawOt > 30) otMinutes = rawOt; 
             }
           }
 
           const dateParts = group.dateStr.split('/');
           let formattedDate = `${dateParts[2]}-${dateParts[1].padStart(2,'0')}-${dateParts[0].padStart(2,'0')}`;
-
-          let day = parseInt(dateParts[0], 10);
-          let month = parseInt(dateParts[1], 10);
-          let year = parseInt(dateParts[2], 10);
+          let day = parseInt(dateParts[0], 10); let month = parseInt(dateParts[1], 10); let year = parseInt(dateParts[2], 10);
           if (day >= 21) { month += 1; if (month > 12) { month = 1; year += 1; } }
           const monthsEn = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
           const payrollPeriod = monthsEn[month - 1] + " " + year;
 
           rowsToUpload.push({
-            employee_id: group.empId,
-            date_str: formattedDate,
-            scan_in: scanIn + ":00",
-            scan_out: scanOut ? scanOut + ":00" : null,
-            late_minutes: lateMinutes,
-            ot_minutes: otMinutes,
-            payroll_period: payrollPeriod
+            employee_id: group.empId, date_str: formattedDate, scan_in: scanIn + ":00",
+            scan_out: scanOut ? scanOut + ":00" : null, late_minutes: lateMinutes, ot_minutes: otMinutes, payroll_period: payrollPeriod
           });
         }
 
         if (rowsToUpload.length > 0) {
           const { error } = await supabaseClient.from('attendance_logs').insert(rowsToUpload);
           if (error) throw error;
-          alert(`🎉 แยกแยะและบันทึกข้อมูลเวลาทำงานสำเร็จทั้งหมด ${rowsToUpload.length} รายการ!`);
+          alert(`🎉 บันทึกข้อมูลเวลาทำงานสำเร็จทั้งหมด ${rowsToUpload.length} รายการ!`);
           document.getElementById('rawFingerprintText').value = '';
-        } else {
-          alert('ไม่พบข้อมูลรูปแบบเวลาเข้าออกงานที่ถูกต้องในข้อความ');
         }
       } catch (err) {
-        alert('เกิดข้อผิดพลาดในการประมวลผลล็อก: ' + err.message);
+        alert('เกิดข้อผิดพลาด: ' + err.message);
       } finally {
         document.getElementById('scanLoader').style.display = 'none';
       }
@@ -888,11 +838,9 @@
       const selectedMonth = document.getElementById('selectPayrollMonth').value;
 
       if(!id1) { alert('กรุณาเลือกพนักงานคนแรกก่อนครับ'); return; }
-
       document.getElementById('calcLoader').style.display = 'flex'; 
       document.getElementById('dualSlipsWrapper').style.display = 'none'; 
-      document.getElementById('slipsContainer').innerHTML = ''; 
-      loadedSlipsData = [];
+      document.getElementById('slipsContainer').innerHTML = ''; loadedSlipsData = [];
 
       try {
         await fetchIndividualSlipData(id1, selectedMonth);
@@ -907,7 +855,7 @@
 
     async function fetchIndividualSlipData(empId, targetMonth) {
       const employee = localEmployeesCache.find(e => String(e.id) === String(empId));
-      if (!employee) throw new Error('ไม่พบข้อมูลฐานรายได้ของรหัสพนักงาน: ' + empId);
+      if (!employee) throw new Error('ไม่พบข้อมูลรหัสพนักงาน: ' + empId);
 
       const { data: logs, error } = await supabaseClient.from('attendance_logs').select('late_minutes, ot_minutes').eq('employee_id', empId).eq('payroll_period', targetMonth);
       if (error) throw error;
@@ -928,23 +876,20 @@
       const othersDeduct = Number(employee.court_deduct) + Number(employee.student_loan_deduct);
 
       loadedSlipsData.push({
-        emp: employee,
-        month: targetMonth,
+        emp: employee, month: targetMonth,
         attendance: { overtime: overtimeEarnings, noWork: noWorkNoPay, social: socialSecurity, othersDeduct: othersDeduct }
       });
     }
 
     function finalizeSlipsRender() {
-      const container = document.getElementById('slipsContainer');
-      container.innerHTML = "";
+      const container = document.getElementById('slipsContainer'); container.innerHTML = "";
       loadedSlipsData.forEach((data, index) => { container.innerHTML += createSlipHTMLTemplate(index, data); });
       loadedSlipsData.forEach((data, index) => { recalculateIndividualTotals(index); });
       document.getElementById('dualSlipsWrapper').style.display = 'block';
     }
 
     function createSlipHTMLTemplate(index, data) {
-      const fName = data.emp.name.split(' ')[0] || data.emp.name; 
-      const lName = data.emp.name.split(' ')[1] || '';
+      const fName = data.emp.name.split(' ')[0] || data.emp.name; const lName = data.emp.name.split(' ')[1] || '';
       return `
         <div class="slip-box" id="slipBox_${index}">
           <div class="slip-header">
@@ -955,7 +900,6 @@
             <div style="text-align: right;"><strong style="color: #dc2626; font-size: 11px;">เอกสารลับเฉพาะ<br>CONFIDENTIAL</strong></div>
           </div>
           <div class="slip-title">เอกสารแสดงรายได้<br><span style="font-weight: normal; font-style: italic; text-decoration: underline;">Salary Slip</span></div>
-          
           <div class="slip-meta-grid">
             <div class="meta-cell"><label>Pay Slip in:</label><span>${data.month}</span></div>
             <div class="meta-cell"><label>Name:</label><span>${fName}</span></div>
@@ -965,42 +909,20 @@
             <div class="meta-cell"><label>Department:</label><span>${data.emp.dept || '-'}</span></div>
             <div class="meta-cell"><label>Bank a/c no.:</label><span>${data.emp.bank_acc || '-'}</span></div>
           </div>
-          
           <table class="slip-table">
-            <thead>
-                <tr>
-                    <th>Earnings</th>
-                    <th>Claims</th>
-                    <th>Deductions</th>
-                </tr>
-            </thead>
+            <thead><tr><th>Earnings</th><th>Claims</th><th>Deductions</th></tr></thead>
             <tbody>
               <tr>
                 <td>
                   <div class="row-item"><span>Basic salary</span><input type="number" class="slip-input e-calc_${index}" id="iBasic_${index}" value="${data.emp.salary}" oninput="recalculateIndividualTotals(${index})"></div>
-                  <div class="row-item"><span>Others</span><input type="number" class="slip-input e-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
-                  <div class="row-item"><span>Bonus</span><input type="number" class="slip-input e-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
                   <div class="row-item"><span>Overtime</span><input type="number" class="slip-input e-calc_${index}" id="iOvertime_${index}" value="${data.attendance.overtime}" oninput="recalculateIndividualTotals(${index})" style="color: blue;"></div>
-                  <div class="row-item"><span>Incentive (Sales)</span><input type="number" class="slip-input e-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
-                  <div class="row-item"><span>Incentive (V-Chef)</span><input type="number" class="slip-input e-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
-                  <div class="row-item"><span>Incentive (No Late)</span><input type="number" class="slip-input e-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
                 </td>
                 <td>
-                  <div class="row-item"><span>Travelling</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
-                  <div class="row-item"><span>Communication</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
-                  <div class="row-item"><span>Transport</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
-                  <div class="row-item"><span>Incentive</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
                   <div class="row-item"><span>Extra benefit</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
-                  <br><br>
-                  <div class="row-item"><span>Other claims</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
                 </td>
                 <td>
                   <div class="row-item"><span>Social security</span><input type="number" class="slip-input d-calc_${index}" id="iSocial_${index}" value="${data.attendance.social}" oninput="recalculateIndividualTotals(${index})"></div>
-                  <div class="row-item"><span>Withholding tax</span><input type="number" class="slip-input d-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
-                  <div class="row-item"><span>Deposits</span><input type="number" class="slip-input d-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
                   <div class="row-item"><span>No work No Pay</span><input type="number" class="slip-input d-calc_${index}" id="iNoWork_${index}" value="${data.attendance.noWork}" oninput="recalculateIndividualTotals(${index})" style="color: red;"></div>
-                  <div class="row-item"><span>Unpaid Leave</span><input type="number" class="slip-input d-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
-                  <br><br>
                   <div class="row-item"><span>Others</span><input type="number" class="slip-input d-calc_${index}" id="iOtherDeduct_${index}" value="${data.attendance.othersDeduct}" oninput="recalculateIndividualTotals(${index})"></div>
                 </td>
               </tr>
@@ -1008,12 +930,9 @@
                 <td colspan="2"><div class="slip-total-box"><span>Total</span><span id="txtTotalEarnings_${index}">0.00</span></div></td>
                 <td><div class="slip-total-box"><span>Total deductions</span><span id="txtTotalDeductions_${index}">0.00</span></div></td>
               </tr>
-              <tr>
-                <td colspan="3"><div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; padding: 4px 0;"><strong>Net amount</strong><div><strong style="font-size: 16px; border-bottom: double 3px #000; padding-bottom: 2px;" id="txtNetAmount_${index}">0.00</strong> Baht</div></div></td>
-              </tr>
+              <tr><td colspan="3"><div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; padding: 4px 0;"><strong>Net amount</strong><div><strong style="font-size: 16px; border-bottom: double 3px #000; padding-bottom: 2px;" id="txtNetAmount_${index}">0.00</strong> Baht</div></div></td></tr>
             </tbody>
           </table>
-          <div class="slip-warning-text" style="color: red; font-size: 10px; margin-top: 10px; text-align: center;">หมายเหตุ : การเปิดเผยเงินเดือน หรือ รายได้ตนเองกับพนักงานท่านอื่น ถือเป็นความผิดร้ายแรงของบริษัทฯ</div>
         </div>
       `;
     }
@@ -1027,10 +946,8 @@
       document.getElementById(`txtNetAmount_${index}`).textContent = (e - d).toLocaleString(undefined, {minimumFractionDigits: 2});
     }
 
-    // ฟังก์ชันเซฟสลิปเงินเดือน (ดักจับและอัปเดตแทนแทรกซ้ำ ป้องกัน Bug ข้อมูลซ้ำซ้อน)
     async function saveDualSlipsFinal() {
       const selectedMonth = document.getElementById('selectPayrollMonth').value;
-      
       try {
         for (let index = 0; index < loadedSlipsData.length; index++) {
           const data = loadedSlipsData[index];
@@ -1039,132 +956,68 @@
           document.querySelectorAll(`.d-calc_${index}`).forEach(i => d += (parseFloat(i.value)||0));
 
           const payload = {
-            payroll_month: selectedMonth,
-            employee_id: data.emp.id,
-            name: data.emp.name,
-            position: data.emp.position || '-',
+            payroll_month: selectedMonth, employee_id: data.emp.id, name: data.emp.name, position: data.emp.position || '-',
             basic_salary: parseFloat(document.getElementById(`iBasic_${index}`).value)||0,
             ot_earnings: parseFloat(document.getElementById(`iOvertime_${index}`).value)||0,
             social_security: parseFloat(document.getElementById(`iSocial_${index}`).value)||0,
             no_work_no_pay: parseFloat(document.getElementById(`iNoWork_${index}`).value)||0,
             others_deduct: parseFloat(document.getElementById(`iOtherDeduct_${index}`).value)||0,
-            total_earnings: e,
-            total_deductions: d,
-            net_amount: e - d,
-            dept: data.emp.dept || '-'
+            total_earnings: e, total_deductions: d, net_amount: e - d, dept: data.emp.dept || '-'
           };
 
-          const { data: existingRow } = await supabaseClient
-            .from('monthly_payroll_summary')
-            .select('id')
-            .eq('payroll_month', selectedMonth)
-            .eq('employee_id', data.emp.id)
-            .maybeSingle();
-
+          const { data: existingRow } = await supabaseClient.from('monthly_payroll_summary').select('id').eq('payroll_month', selectedMonth).eq('employee_id', data.emp.id).maybeSingle();
           if (existingRow) {
-            const { error } = await supabaseClient.from('monthly_payroll_summary').update(payload).eq('id', existingRow.id);
-            if (error) throw error;
+            await supabaseClient.from('monthly_payroll_summary').update(payload).eq('id', existingRow.id);
           } else {
-            const { error } = await supabaseClient.from('monthly_payroll_summary').insert([payload]);
-            if (error) throw error;
+            await supabaseClient.from('monthly_payroll_summary').insert([payload]);
           }
         }
-
-        alert('บันทึกปิดยอดสลิปลงฐานข้อมูล Supabase เรียบร้อยครับ! (ระบบตรวจสอบและเคลียร์ค่าซ้ำให้อัตโนมัติ)');
-        loadDashboardData();
-      } catch (err) {
-        alert('เกิดข้อผิดพลาดในการบันทึกสรุปยอด: ' + err.message);
-      }
+        alert('บันทึกปิดงบเรียบร้อยครับ!'); loadDashboardData();
+      } catch (err) { alert(err.message); }
     }
 
-    // --- 8. ส่วนจัดแจงรายงานบัญชีปิดงบรายเดือนและรายปี (Report View) ---
+    // --- 8. ส่วนจัดแจงรายงานรายจ่ายรายปี (Report View) ---
     async function loadPayrollReport() {
-        document.getElementById('reportTableBody').innerHTML = '<tr><td colspan="10" style="text-align: center;"><i class="fa fa-spinner fa-spin mr-2"></i> กำลังดึงรายการปิดยอดจากระบบคลาวด์...</td></tr>';
-        
         try {
-          const { data, error } = await supabaseClient.from('monthly_payroll_summary').select('*');
-          if (error) throw error;
-
-          if (!data || data.length === 0) {
-              document.getElementById('reportTableBody').innerHTML = '<tr><td colspan="10" style="text-align: center; color: red;">ไม่พบข้อมูลรายการบันทึกบัญชี กรุณาบันทึกยอดสลิปก่อน</td></tr>';
-              return;
-          }
+          const { data } = await supabaseClient.from('monthly_payroll_summary').select('*');
+          if (!data) return;
           cachedReportData = data.map(r => ({
-            month: r.payroll_month,
-            id: r.employee_id,
-            name: r.name,
-            dept: r.dept,
-            position: r.position,
-            basic: Number(r.basic_salary),
-            ot: Number(r.ot_earnings),
-            noWork: Number(r.no_work_no_pay),
-            othersDeduct: Number(r.others_deduct),
-            netAmount: Number(r.net_amount)
+            month: r.payroll_month, id: r.employee_id, name: r.name, dept: r.dept, position: r.position,
+            basic: Number(r.basic_salary), ot: Number(r.ot_earnings), noWork: Number(r.no_work_no_pay), othersDeduct: Number(r.others_deduct), netAmount: Number(r.net_amount)
           }));
-
-          populateReportDropdowns(cachedReportData);
-          filterPayrollReportData();
-        } catch (err) {
-          alert('ไม่สามารถเปิดใบรายงานได้: ' + err.message);
-        }
+          populateReportDropdowns(cachedReportData); filterPayrollReportData();
+        } catch (err) { console.error(err); }
     }
-    
     function populateReportDropdowns(data) {
         const months = [...new Set(data.map(item => String(item.month).trim()))];
-        
         const dropdownOverview = document.getElementById('filterReportMonth');
-        const dropdownIndividual = document.getElementById('filterReportEmployeeMonth');
-        
         dropdownOverview.innerHTML = '<option value="ALL">-- แสดงทุกเดือน --</option>';
-        dropdownIndividual.innerHTML = '<option value="ALL">-- ทุกเดือน (รายปี) --</option>';
-        
-        months.forEach(m => {
-            if (m) {
-                dropdownOverview.innerHTML += `<option value="${m}">${m}</option>`;
-                dropdownIndividual.innerHTML += `<option value="${m}">${m}</option>`;
-            }
-        });
-
-        if (months.length > 0) {
-            dropdownOverview.value = months[months.length - 1];
-        }
+        months.forEach(m => { dropdownOverview.innerHTML += `<option value="${m}">${m}</option>`; });
     }
-    
     function toggleReportFilterMode() {
       const mode = document.querySelector('input[name="reportMode"]:checked').value;
-      if (mode === 'OVERVIEW') { document.getElementById('filterAreaOverview').style.display = 'grid'; document.getElementById('filterAreaIndividual').style.display = 'none'; } 
-      else { document.getElementById('filterAreaOverview').style.display = 'none'; document.getElementById('filterAreaIndividual').style.display = 'grid'; }
+      document.getElementById('filterAreaOverview').style.display = mode === 'OVERVIEW' ? 'grid' : 'none';
+      document.getElementById('filterAreaIndividual').style.display = mode === 'INDIVIDUAL' ? 'grid' : 'none';
       filterPayrollReportData(); 
     }
-
     function filterPayrollReportData() {
       const mode = document.querySelector('input[name="reportMode"]:checked').value;
       const tbody = document.getElementById('reportTableBody'); tbody.innerHTML = '';
       let sumBasic = 0; let sumOt = 0; let sumNoWork = 0; let sumOthers = 0; let sumNet = 0; let hasRows = false;
-
       cachedReportData.forEach(r => {
         let match = false;
         if (mode === 'OVERVIEW') {
-          const mFilter = document.getElementById('filterReportMonth').value;
-          const dFilter = document.getElementById('filterReportDept').value;
+          const mFilter = document.getElementById('filterReportMonth').value; const dFilter = document.getElementById('filterReportDept').value;
           if ((mFilter === 'ALL' || r.month === mFilter) && (dFilter === 'ALL' || r.dept === dFilter)) match = true;
         } else {
           const eFilter = document.getElementById('filterReportEmployee').value;
-          const emFilter = document.getElementById('filterReportEmployeeMonth').value;
-          if(String(r.id) === String(eFilter) && (emFilter === 'ALL' || r.month === emFilter)) match = true;
+          if(String(r.id) === String(eFilter)) match = true;
         }
-        
         if(match) {
           hasRows = true; sumBasic += r.basic; sumOt += r.ot; sumNoWork += r.noWork; sumOthers += r.othersDeduct; sumNet += r.netAmount;
           tbody.innerHTML += `<tr><td>${r.month}</td><td><strong>${r.id}</strong></td><td>${r.name}</td><td>${r.dept}</td><td>${r.position}</td><td>${r.basic.toLocaleString()} ฿</td><td style="color:blue;">${r.ot?r.ot.toLocaleString()+' ฿':'-'}</td><td style="color:red;">${r.noWork?r.noWork.toLocaleString()+' ฿':'-'}</td><td style="color:red;">${r.othersDeduct?r.othersDeduct.toLocaleString()+' ฿':'-'}</td><td><strong>${r.netAmount.toLocaleString()} ฿</strong></td></tr>`;
         }
       });
-      
-      if(hasRows) {
-        tbody.innerHTML += `<tr class="total-row"><td colspan="5" style="text-align:right;">ยอดรวมสุทธิ:</td><td>${sumBasic.toLocaleString()} ฿</td><td style="color:blue;">${sumOt.toLocaleString()} ฿</td><td style="color:red;">${sumNoWork.toLocaleString()} ฿</td><td style="color:red;">${sumOthers.toLocaleString()} ฿</td><td><span style="border-bottom: double 3px;">${sumNet.toLocaleString()} ฿</span></td></tr>`;
-      } else {
-        tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: red;">ไม่พบข้อมูลตามเงื่อนไขที่เลือก</td></tr>';
-      }
     }
   </script>
 </body>
