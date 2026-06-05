@@ -100,7 +100,6 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-100 text-slate-800 p-6 font-sans relative overflow-x-hidden">
 
-  <!-- SIDEBAR MENU -->
   <div class="sidebar">
     <div class="sidebar-brand-box">
       <img src="Venturetec-03.png" class="w-14 h-14 object-contain mb-1 filter drop-shadow(0 4px 6px rgba(0,0,0,0.2))" alt="Venturetec Logo">
@@ -148,7 +147,6 @@
       </div>
     </div>
 
-    <!-- VIEW: SUMMARY (CEO DASHBOARD) -->
     <div id="view-summary" class="tab-view active">
       <div id="error-container"></div>
       
@@ -198,7 +196,6 @@
       </div>
     </div>
 
-    <!-- VIEW: CEO DASHBOARD KPI SETTING (UPDATED BASED ON FILE STRUCTURE) -->
     <div id="view-ceo-setting" class="tab-view">
         <div class="card-ui">
             <h3><i class="fa-solid fa-sliders text-amber-500"></i> ฟอร์มคีย์เป้าหมายและยอดขายของทีมเซลล์ (ตามโครงสร้างคลังข้อมูลจริงบริษัท)</h3>
@@ -250,7 +247,6 @@
         </div>
     </div>
 
-    <!-- VIEW: EMPLOYEE DATABASE -->
     <div id="view-employee" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-user-gear"></i> ฟอร์มจัดการข้อมูลพนักงาน</h3>
@@ -278,7 +274,6 @@
       </div>
     </div>
 
-    <!-- VIEW: FINGERPRINT UPLOAD -->
     <div id="view-scan" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-fingerprint"></i> กล่องนำเข้าข้อมูลเวลาทำงานดิบ (Log Data Input)</h3>
@@ -290,7 +285,6 @@
       </div>
     </div>
 
-    <!-- VIEW: PAYROLL STUDIO (SLIP GENERATOR) -->
     <div id="view-slip" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-calculator"></i> เลือกพนักงานเพื่อพิมพ์สลิป</h3>
@@ -318,7 +312,6 @@
       </div>
     </div>
 
-    <!-- VIEW: PAYROLL STATEMENT REPORT -->
     <div id="view-report" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-sliders"></i> เลือกรูปแบบการคัดกรองรายงาน</h3>
@@ -372,7 +365,6 @@
 
   </div>
 
-  <!-- ==================== ส่วนของระบบควบคุม SUPABASE REALTIME JAVASCRIPT ==================== -->
   <script>
     const SUPABASE_URL = "https://icnvofzjmonueefelajk.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_75XCIAfjQqnd8tDxZg36Yg_cde3Bsoo";
@@ -414,7 +406,9 @@
         const { data: summaryData, error: summaryErr } = await supabaseClient.from('monthly_payroll_summary').select('*');
         if (summaryErr) throw summaryErr;
 
-        // ดึงข้อมูลงบเป้าหมายยอดขายห้างจริงของทีมเซลล์PC จากตารางใหม่ที่สอดคล้องกับไฟล์ Excel บริษัท
+        const { data: kpiRecords, error: kpiErr } = await supabaseClient.from('company_kpi_records').select('*');
+        if (kpiErr) throw kpiErr;
+
         const { data: salesRecords, error: salesErr } = await supabaseClient.from('sales_records').select('*');
         if (salesErr) throw salesErr;
 
@@ -424,8 +418,18 @@
         const empMetaMap = {};
         rawEmployees.forEach(e => { empMetaMap[String(e.id).trim()] = e; });
 
-        const allPeriods = [...new Set(summaryData.map(item => String(item.payroll_month).trim()))];
-        const dropdownPeriods = allPeriods.length > 0 ? allPeriods : ["May 2026", "April 2026", "March 2026", "February 2026"];
+        // รวมรายชื่อช่วงงวดเดือนทั้งหมดเพื่อปั่น Dropdown ข้อมูล
+        const periodsSet = new Set();
+        summaryData.forEach(item => { if(item.payroll_month) periodsSet.add(String(item.payroll_month).trim()); });
+        kpiRecords.forEach(item => { if(item.month_period) periodsSet.add(String(item.month_period).trim()); });
+        salesRecords.forEach(item => { if(item.month_period) periodsSet.add(String(item.month_period).trim()); });
+
+        let dropdownPeriods = Array.from(periodsSet);
+        if (dropdownPeriods.length === 0) {
+          dropdownPeriods = ["May 2026", "April 2026", "March 2026", "February 2026"];
+        } else {
+          dropdownPeriods.sort((a, b) => new Date(b) - new Date(a));
+        }
         
         const targetSelect = document.getElementById('targetMonthFilter');
         const compareSelect = document.getElementById('compareMonthFilter');
@@ -456,15 +460,14 @@
         const headcountGrowth = (((tSalesHeadcount - cSalesHeadcount) / cSalesHeadcount) * 100).toFixed(1);
         const payrollGrowth = (((tSalesPayroll - cSalesPayroll) / cSalesPayroll) * 100).toFixed(1);
 
-        // ดึงผลรวมยอดขายจริงและเป้าหมายของทีมเซลล์PC ทั่วห้างจากตารางบันทึกงวด
         const currentMonthSalesRows = salesRecords.filter(s => s.month_period === currentTargetVal);
         const prevMonthSalesRows = salesRecords.filter(s => s.month_period === currentCompareVal);
 
         const actualSalesRevenue = currentMonthSalesRows.length > 0 ? currentMonthSalesRows.reduce((sum, s) => sum + Number(s.actual_sales), 0) : (tSalesPayroll * 7.2);
         const prevSalesRevenue = prevMonthSalesRows.length > 0 ? prevMonthSalesRows.reduce((sum, s) => sum + Number(s.actual_sales), 0) : (cSalesPayroll * 7.0);
-        const salesGrowth = (((actualSalesRevenue - prevSalesRevenue) / prevSalesRevenue) * 100).toFixed(1);
+        const salesGrowth = prevSalesRevenue > 0 ? (((actualSalesRevenue - prevSalesRevenue) / prevSalesRevenue) * 100).toFixed(1) : "0.0";
 
-        const grossProfit = actualSalesRevenue * 0.35; // สัดส่วนกำไรขั้นต้นอิงจากฐานรายรับ
+        const grossProfit = actualSalesRevenue * 0.35; 
         const payRatioVal = actualSalesRevenue > 0 ? ((tSalesPayroll / actualSalesRevenue) * 100).toFixed(1) : 0;
         const payRatioPrev = prevSalesRevenue > 0 ? ((cSalesPayroll / prevSalesRevenue) * 100).toFixed(1) : 0;
         const payRatioDiff = (payRatioVal - payRatioPrev).toFixed(1);
@@ -501,8 +504,7 @@
         } else {
           uniqueBranches.forEach(b => {
             const bInfo = branchGroup[b];
-            // คัดหาตัวเลขเป้าหมายจริงรายห้างที่ผูกไว้ในระบบ
-            const matchRecord = currentMonthSalesRevenueRows = currentMonthSalesRows.find(s => s.branch_name === b);
+            const matchRecord = currentMonthSalesRows.find(s => s.branch_name === b);
             const subSales = matchRecord ? Number(matchRecord.actual_sales) : (bInfo.payrollCost * 7.2);
             const payPercent = subSales > 0 ? ((bInfo.payrollCost / subSales) * 100) : 0;
             
@@ -530,7 +532,7 @@
       }
     }
 
-    // --- 3. ส่วนฟังก์ชันกรอกและจัดการตัวเลขจริงรายเซลรายห้างประจำงวด (CEO Settings) ---
+    // --- 3. ส่วนฟังก์ชันบันทึกข้อมูล KPI ยอดขายห้างของพนักงานขาย (CEO Settings) ---
     async function saveSalesRecordToSupabase() {
         const month_period = document.getElementById('kpiPeriodMonth').value;
         const salesperson_id = document.getElementById('kpiSalespersonSelect').value;
@@ -546,10 +548,11 @@
         document.getElementById('kpiLoader').style.display = 'flex';
 
         try {
+            // ระบบ Upsert ป้องกันประวัติซ้ำในงวดเดียวกัน
             const { error } = await supabaseClient.from('sales_records').upsert([{ month_period, salesperson_id, branch_name, target_sales, actual_sales }], { onConflict: 'month_period,salesperson_id' });
             if (error) throw error;
 
-            alert(`🎉 บันทึกประวัติและเป้าหมายยอดขายประจำห้างของเซลเรียบร้อย!`);
+            alert(`🎉 บันทึกประวัติและเป้าหมายยอดขายประจำห้างของเซลเรียบร้อย! (ระบบเคลียร์ค่าซ้ำให้อัตโนมัติ)`);
             document.getElementById('kpiTargetInput').value = '';
             document.getElementById('kpiActualInput').value = '';
             loadCompanyKPIHistoryList();
@@ -575,7 +578,6 @@
                 return;
             }
 
-            // สรรหาตัวเชื่อมชื่อเล่น/ชื่อจริงของพนักงานขายมาแสดงในตารางประวัติ
             const empMap = {};
             localEmployeesCache.forEach(e => { empMap[String(e.id)] = e.name; });
 
@@ -616,7 +618,7 @@
         document.getElementById('kpiBranchInput').value = matchEmp ? (matchEmp.assigned_branch || 'ไม่ระบุห้าง') : '';
     }
 
-    // --- 4. ส่วนตัวเลือกพนักงานขายในแดชบอร์ดรายบุคคล ---
+    // --- 4. ส่วนตัวเลือกพนักงานขายในแดชบอร์ดรายบุคคล (ตัด Bug รายชื่อเบิ้ลซ้ำซ้อนสำเร็จ) ---
     function loadSalespersonDropdown(targetRowsSales) {
       const select = document.getElementById('salespersonFilter');
       const savedSelVal = select.value;
@@ -627,43 +629,58 @@
         return;
       }
       
+      // ลูปคัดกรองล้างชื่อและไอดีพนักงานซ้ำซ้อนออกไปให้เหลือบรรทัดเดียวสะอาดตา
+      const uniqueEmployees = [];
+      const mapCheck = new Set();
+      
       targetRowsSales.forEach(r => {
+        const empIdClean = String(r.employee_id).trim();
+        if(!mapCheck.has(empIdClean)) {
+          mapCheck.add(empIdClean);
+          uniqueEmployees.push(r);
+        }
+      });
+      
+      uniqueEmployees.forEach(r => {
         select.add(new Option(r.name, r.employee_id, false, r.employee_id === savedSelVal));
       });
+      loadSalespersonKPI(); // สั่งประมวลผลคำนวณการ์ดตัวเลขด้านล่างทันที
     }
 
     async function loadSalespersonKPI() {
       const empId = document.getElementById('salespersonFilter').value;
       const targetM = document.getElementById('targetMonthFilter').value;
+      const compareM = document.getElementById('compareMonthFilter').value;
       if(!empId) return;
 
       try {
-        const { data: row, error } = await supabaseClient.from('monthly_payroll_summary').select('*').eq('employee_id', empId).eq('payroll_month', targetM).single();
-        const { data: salesRecords, error: recordErr } = await supabaseClient.from('sales_records').select('*').eq('employee_id', empId).eq('month_period', targetM).single();
-        const { data: empMeta, error: metaErr } = await supabaseClient.from('employees').select('assigned_branch').eq('id', empId).single();
+        const { data: row } = await supabaseClient.from('monthly_payroll_summary').select('*').eq('employee_id', empId).eq('payroll_month', targetM).single();
+        const { data: targetRecord } = await supabaseClient.from('sales_records').select('*').eq('salesperson_id', empId).eq('month_period', targetM).maybeSingle();
+        const { data: compareRecord } = await supabaseClient.from('sales_records').select('*').eq('salesperson_id', empId).eq('month_period', compareM).maybeSingle();
+        const { data: empMeta } = await supabaseClient.from('employees').select('assigned_branch').eq('id', empId).single();
         
-        if (error || !row) {
-          document.getElementById('lbl-sales-branch').textContent = '-';
-          document.getElementById('lbl-sales-actual').textContent = '0M ฿';
-          document.getElementById('lbl-sales-mom').innerHTML = '0%';
-          document.getElementById('lbl-sales-kpi').innerHTML = '0% <span class="text-xs">[เกรด C]</span>';
-          return;
-        }
+        // กฎการเชื่อมโยง: ยอดคีย์จริงจะแสดงผลก่อนเสมอ หากไม่มีให้คำนวณถอดสัดส่วนรายได้เฉลี่ย (Fallback)
+        const actualSales = targetRecord ? Number(targetRecord.actual_sales) : (row ? Number(row.net_amount) * 7.2 : 0);
+        const targetSales = targetRecord ? Number(targetRecord.target_sales) : (row ? Number(row.basic_salary) * 7.5 : 0);
+        const prevSales = compareRecord ? Number(compareRecord.actual_sales) : (compareM === targetM ? actualSales : 0);
 
-        const actualSales = salesRecords ? Number(salesRecords.actual_sales) : (Number(row.net_amount) * 7.2);
-        const targetSales = salesRecords ? Number(salesRecords.target_sales) : (Number(row.basic_salary) * 7.5);
-        const kpiAchievement = targetSales > 0 ? ((actualSales / targetSales) * 100).toFixed(1) : 100;
+        const kpiAchievement = targetSales > 0 ? ((actualSales / targetSales) * 100).toFixed(1) : "0.0";
+        const momGrowth = prevSales > 0 ? (((actualSales - prevSales) / prevSales) * 100).toFixed(1) : "0.0";
 
         let grade = 'B'; let colorClass = 'text-blue-600';
-        if (kpiAchievement >= 100) { grade = 'A'; colorClass = 'text-green-600'; }
-        else if (kpiAchievement < 85) { grade = 'C'; colorClass = 'text-red-600'; }
+        if (parseFloat(kpiAchievement) >= 100) { grade = 'A'; colorClass = 'text-green-600'; }
+        else if (parseFloat(kpiAchievement) < 85) { grade = 'C'; colorClass = 'text-red-600'; }
 
-        document.getElementById('lbl-sales-branch').textContent = (empMeta && empMeta.assigned_branch) ? empMeta.assigned_branch : 'ไม่ระบุห้าง';
-        document.getElementById('lbl-sales-actual').textContent = (actualSales / 1000000).toFixed(2) + 'M ฿';
-        document.getElementById('lbl-sales-mom').innerHTML = `<span class="text-green-600">▲ 3.5%</span>`;
+        document.getElementById('lbl-sales-branch').textContent = targetRecord ? targetRecord.branch_name : ((empMeta && empMeta.assigned_branch) ? empMeta.assigned_branch : 'ไม่ระบุห้าง');
+        document.getElementById('lbl-sales-actual').textContent = actualSales.toLocaleString() + ' ฿';
+        
+        const arrow = parseFloat(momGrowth) >= 0 ? '▲' : '▼';
+        const momColor = parseFloat(momGrowth) >= 0 ? 'text-green-600' : 'text-red-600';
+        document.getElementById('lbl-sales-mom').innerHTML = `<span class="${momColor}">${arrow} ${Math.abs(momGrowth)}%</span>`;
+        
         document.getElementById('lbl-sales-kpi').innerHTML = `${kpiAchievement}% <span class="text-sm font-bold ${colorClass}">[เกรด ${grade}]</span>`;
       } catch (e) {
-        console.error(e);
+        console.error("Error loading salesperson KPI:", e);
       }
     }
 
@@ -683,7 +700,7 @@
         d1.innerHTML = '<option value="">-- กรุณาเลือก --</option>'; 
         d2.innerHTML = '<option value="">-- ไม่เลือก (พิมพ์คนเดียว) --</option>';
         dReport.innerHTML = '<option value="">-- เลือกพนักงาน --</option>';
-        dKpiSalesSelect.innerHTML = '<option value="">-- เลือกเซลล์ที่ดูแลสาขา --</option>';
+        dKpiSalesSelect.innerHTML = '<option value="">-- เลือกพนักงานขาย --</option>';
 
         const tbody = document.getElementById('empTableBody'); 
         tbody.innerHTML = "";
@@ -771,7 +788,7 @@
       }
     }
 
-    // --- 6. ระบบนำเข้า Log และคำนวณประวัติเวลา ---
+    // --- 6. ระบบนำเข้า Log และคำนวณประวัติเวลา (หักเข้า-ออก และทำโอทีเกิน 30 นาที) ---
     async function importLogs() {
       const rawText = document.getElementById('rawFingerprintText').value.trim();
       if(!rawText) { alert('กรุณาวางข้อความดิบประวัติการสแกนนิ้วมือก่อนครับ'); return; }
@@ -823,8 +840,8 @@
             const lastOutMins = timeMinutes[timeMinutes.length - 1].totalMins;
             if (lastOutMins > 1020) { 
               let rawOt = lastOutMins - 1020;
-              if (lateMinutes > 0) rawOt = rawOt - lateMinutes; 
-              if (rawOt > 30) otMinutes = rawOt; 
+              if (lateMinutes > 0) rawOt = rawOt - lateMinutes; // หักนาทีสายออกจากยอดล่วงเวลาตามกฎเกณฑ์
+              if (rawOt > 30) otMinutes = rawOt; // เงื่อนไข: โอทีต้องมากกว่า 30 นาทีถึงจะถูกนับเป็น OT
             }
           }
 
@@ -1010,6 +1027,7 @@
       document.getElementById(`txtNetAmount_${index}`).textContent = (e - d).toLocaleString(undefined, {minimumFractionDigits: 2});
     }
 
+    // ฟังก์ชันเซฟสลิปเงินเดือน (ดักจับและอัปเดตแทนแทรกซ้ำ ป้องกัน Bug ข้อมูลซ้ำซ้อน)
     async function saveDualSlipsFinal() {
       const selectedMonth = document.getElementById('selectPayrollMonth').value;
       
@@ -1036,11 +1054,23 @@
             dept: data.emp.dept || '-'
           };
 
-          const { error } = await supabaseClient.from('monthly_payroll_summary').insert([payload]);
-          if (error) throw error;
+          const { data: existingRow } = await supabaseClient
+            .from('monthly_payroll_summary')
+            .select('id')
+            .eq('payroll_month', selectedMonth)
+            .eq('employee_id', data.emp.id)
+            .maybeSingle();
+
+          if (existingRow) {
+            const { error } = await supabaseClient.from('monthly_payroll_summary').update(payload).eq('id', existingRow.id);
+            if (error) throw error;
+          } else {
+            const { error } = await supabaseClient.from('monthly_payroll_summary').insert([payload]);
+            if (error) throw error;
+          }
         }
 
-        alert('บันทึกปิดยอดสลิปลงฐานข้อมูล Supabase เรียบร้อยครับ!');
+        alert('บันทึกปิดยอดสลิปลงฐานข้อมูล Supabase เรียบร้อยครับ! (ระบบตรวจสอบและเคลียร์ค่าซ้ำให้อัตโนมัติ)');
         loadDashboardData();
       } catch (err) {
         alert('เกิดข้อผิดพลาดในการบันทึกสรุปยอด: ' + err.message);
