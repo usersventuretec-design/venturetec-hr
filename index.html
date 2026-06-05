@@ -73,10 +73,9 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-100 text-slate-800 p-6 font-sans relative overflow-x-hidden">
 
-  <!-- SIDEBAR MENU -->
   <div class="sidebar">
     <div class="sidebar-brand-box">
-      <img src="Venturetec-03.png" class="w-14 h-14 object-contain mb-1 filter drop-shadow(0 4px 6px rgba(0,0,0,0.2))" alt="Venturetec Logo">
+      <img src="Venturetec-03.png" class="w-14 h-14 object-contain mb-1 filter drop-shadow(0 4px 6px rgba(0,0,0,0.2))" alt="Venturetec Logo" onerror="this.src='https://via.placeholder.com/60?text=Logo'">
       <h2 class="text-white font-bold text-lg tracking-wider">VENTURETEC HR</h2>
     </div>
     <div class="flex-1 mt-2">
@@ -121,7 +120,6 @@
       </div>
     </div>
 
-    <!-- VIEW: SUMMARY (CEO DASHBOARD) -->
     <div id="view-summary" class="tab-view active">
       <div id="error-container"></div>
       
@@ -132,6 +130,17 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="card-ui"><h3 class="card-header text-sm font-bold text-slate-600 mb-4"><i class="fa fa-chart-bar text-blue-600"></i> MONTHLY TOTAL NET REVENUE vs ALL DEPT PAYROLL</h3><div class="relative w-full" style="height: 250px;"><canvas id="payrollTrendChart"></canvas></div></div>
         <div class="card-ui"><h3 class="card-header text-sm font-bold text-slate-600 mb-4"><i class="fa fa-chart-line text-emerald-600"></i> SALES CONVERSION & BREAK-EVEN LINE</h3><div class="relative w-full" style="height: 250px;"><canvas id="salesPayrollChart"></canvas></div></div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div class="card-ui">
+          <h3 class="card-header text-sm font-bold text-slate-600 mb-4"><i class="fa-solid fa-chart-line text-indigo-600"></i> REVENUE TREND (Actual Sales)</h3>
+          <div class="relative w-full" style="height: 300px;"><canvas id="executiveRevenueTrendChart"></canvas></div>
+        </div>
+        <div class="card-ui">
+          <h3 class="card-header text-sm font-bold text-slate-600 mb-4"><i class="fa-solid fa-chart-bar text-violet-600"></i> COMPENSATION TREND EXPENSES</h3>
+          <div class="relative w-full" style="height: 300px;"><canvas id="executiveCompTrendChart"></canvas></div>
+        </div>
       </div>
 
       <div class="card-ui mb-6">
@@ -157,7 +166,6 @@
         </div>
       </div>
 
-      <!-- ตารางวิเคราะห์งบกำไรขาดทุนพนักงานทุกแผนก -->
       <div class="card-ui mb-6 overflow-x-auto">
           <h3 class="text-sm font-bold text-slate-700 mb-4"><i class="fa-solid fa-briefcase text-blue-800"></i> COMPANY PROFITABILITY STATEMENT & OPERATIONAL PAYROLL COST</h3>
           <table class="data-table w-full">
@@ -180,7 +188,6 @@
       </div>
     </div>
 
-    <!-- VIEW: CEO DASHBOARD KPI SETTING -->
     <div id="view-ceo-setting" class="tab-view">
         <div class="card-ui">
             <h3><i class="fa-solid fa-sliders text-amber-500"></i> ฟอร์มคีย์เป้าหมายและยอดขายของทีมเซลล์ (ตามโครงสร้างคลังข้อมูลจริงบริษัท)</h3>
@@ -232,7 +239,6 @@
         </div>
     </div>
 
-    <!-- VIEW: EMPLOYEE DATABASE -->
     <div id="view-employee" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-user-gear"></i> ฟอร์มจัดการข้อมูลพนักงาน</h3>
@@ -260,7 +266,6 @@
       </div>
     </div>
 
-    <!-- VIEW: FINGERPRINT UPLOAD -->
     <div id="view-scan" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-fingerprint"></i> กล่องนำเข้าข้อมูลเวลาทำงานดิบ (Log Data Input)</h3>
@@ -272,7 +277,6 @@
       </div>
     </div>
 
-    <!-- VIEW: PAYROLL STUDIO -->
     <div id="view-slip" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-calculator"></i> เลือกพนักงานเพื่อพิมพ์สลิป</h3>
@@ -298,7 +302,6 @@
       </div>
     </div>
 
-    <!-- VIEW: PAYROLL STATEMENT REPORT -->
     <div id="view-report" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-sliders"></i> เลือกรูปแบบการคัดกรองรายงาน</h3>
@@ -326,7 +329,6 @@
 
   </div>
 
-  <!-- ==================== ส่วนของระบบควบคุม SUPABASE JAVASCRIPT REALTIME ==================== -->
   <script>
     const SUPABASE_URL = "https://icnvofzjmonueefelajk.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_75XCIAfjQqnd8tDxZg36Yg_cde3Bsoo";
@@ -370,7 +372,7 @@
         if (summaryErr) throw summaryErr;
 
         const { data: kpiRecords, error: kpiErr } = await supabaseClient.from('company_kpi_records').select('*');
-        if (kpiErr) throw kpiErr;
+        if (kpiErr && kpiErr.code !== '42P01') console.warn(kpiErr); // Ignore if table doesn't exist yet
 
         const { data: salesRecords, error: salesErr } = await supabaseClient.from('sales_records').select('*');
         if (salesErr) throw salesErr;
@@ -456,6 +458,119 @@
         charts.payroll = new Chart(document.getElementById('payrollTrendChart'), { type: 'bar', data: { labels: [currentCompareVal, currentTargetVal], datasets: [{ label: 'Total Company Revenue', data: [prevSalesRevenue, actualSalesRevenue], backgroundColor: '#1e3a8a' }, { label: 'All Dept Payroll Cost', data: [cTotalPayrollAllDept, tTotalPayrollAllDept], backgroundColor: '#dc2626' }] }, options: { responsive: true, maintainAspectRatio: false } });
         charts.sales = new Chart(document.getElementById('salesPayrollChart'), { type: 'line', data: { labels: [currentCompareVal, currentTargetVal], datasets: [{ label: 'Gross Profit Line (35%)', data: [prevSalesRevenue * 0.35, grossProfit], borderColor: '#16a34a', tension: 0.2 }, { label: 'Total Payroll Expenses', data: [cTotalPayrollAllDept, tTotalPayrollAllDept], borderColor: '#2563eb', tension: 0.2 }] }, options: { responsive: true, maintainAspectRatio: false } });
         charts.donut = new Chart(document.getElementById('headcountChart'), { type: 'doughnut', data: { labels: Object.keys(branchGroup).length > 0 ? Object.keys(branchGroup) : ['ไม่มีข้อมูลเซลล์'], datasets: [{ data: Object.keys(branchGroup).length > 0 ? Object.values(branchGroup).map(b => b.headcount) : [0], backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4'], cutout: '70%' }] }, options: { responsive: true, maintainAspectRatio: false } });
+
+        // ==========================================
+        // 📈 ส่วนประมวลผลเพิ่มกราฟใหม่ 2 ตัวตามภาพสเก็ตช์
+        // ==========================================
+        
+        // 1. เรียงลำดับเดือนจากอดีตไปปัจจุบันเพื่อความถูกต้องของแกน X (Timeline)
+        const chronologicalPeriods = Array.from(periodsSet).sort((a, b) => new Date(a) - new Date(b));
+
+        // 2. คำนวณหา Array ข้อมูล Revenue และค่าใช้จ่าย Compensation รายเดือน
+        const revenueDataTimeline = [];
+        const salaryDataTimeline = [];
+        const otDataTimeline = [];
+        const incentiveDataTimeline = [];
+        const commissionDataTimeline = [];
+
+        chronologicalPeriods.forEach(p => {
+            // รวบรวมยอดขายประจำเดือน
+            const monthSales = salesRecords.filter(s => s.month_period === p);
+            const totalSales = monthSales.length > 0 ? monthSales.reduce((sum, s) => sum + Number(s.actual_sales), 0) : 0;
+            revenueDataTimeline.push(totalSales);
+
+            // รวบรวมองค์ประกอบเงินเดือนและสวัสดิการทีม
+            const monthPayrollRows = summaryData.filter(r => r.payroll_month === p);
+            
+            const totalSalary = monthPayrollRows.reduce((sum, r) => sum + (Number(r.basic_salary) || 0), 0);
+            const totalOt = monthPayrollRows.reduce((sum, r) => sum + (Number(r.ot_earnings) || 0), 0);
+            
+            // สัดส่วน Commission และ Incentive
+            const totalCommission = monthSales.reduce((sum, s) => sum + (Number(s.actual_sales) * 0.03), 0); 
+            const totalIncentive = monthPayrollRows.reduce((sum, r) => sum + (Number(r.total_earnings) - Number(r.basic_salary) - (Number(r.ot_earnings)||0)), 0);
+
+            salaryDataTimeline.push(totalSalary);
+            otDataTimeline.push(totalOt);
+            incentiveDataTimeline.push(totalIncentive > 0 ? totalIncentive : 0);
+            commissionDataTimeline.push(totalCommission);
+        });
+
+        // 3. ปรับลายเส้นสปไลน์ให้พริ้วไหวโค้งมน (Cubic Interpolation) ตามแบบฟอร์มดีไซน์
+        charts.revenueTrend = new Chart(document.getElementById('executiveRevenueTrendChart'), {
+            type: 'line',
+            data: {
+                labels: chronologicalPeriods,
+                datasets: [{
+                    label: 'Actual Revenue',
+                    data: revenueDataTimeline,
+                    borderColor: '#16a34a', // สีเขียวหรูหราตาม Sketch
+                    backgroundColor: 'rgba(22, 163, 74, 0.05)',
+                    borderWidth: 3,
+                    tension: 0.4, // ความโค้งมนของเส้น (Spline Curve)
+                    pointBackgroundColor: '#16a34a',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        ticks: { callback: function(val) { return '฿' + val.toLocaleString(); } },
+                        grid: { color: 'rgba(0, 0, 0, 0.03)' }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 4. สร้างกราฟแท่งแบบ Stacked Bar (แยกชั้นประเภทรายจ่ายในแท่งเดียว)
+        charts.compensationTrend = new Chart(document.getElementById('executiveCompTrendChart'), {
+            type: 'bar',
+            data: {
+                labels: chronologicalPeriods,
+                datasets: [
+                    {
+                        label: 'Salary (ฐานเงินเดือน)',
+                        data: salaryDataTimeline,
+                        backgroundColor: '#1e3a8a', // น้ำเงินกรมท่าเข้ม
+                    },
+                    {
+                        label: 'OT (ค่าล่วงเวลา)',
+                        data: otDataTimeline,
+                        backgroundColor: '#2563eb', // น้ำเงินสว่าง
+                    },
+                    {
+                        label: 'Incentive (เงินพิเศษ)',
+                        data: incentiveDataTimeline,
+                        backgroundColor: '#f59e0b', // เหลืองส้ม Amber
+                    },
+                    {
+                        label: 'Commission (ค่าคอมมิชชัน)',
+                        data: commissionDataTimeline,
+                        backgroundColor: '#7c3aed', // ม่วงสว่าง Luxury
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    x: { stacked: true, grid: { display: false } },
+                    y: { 
+                        stacked: true,
+                        ticks: { callback: function(val) { return '฿' + val.toLocaleString(); } },
+                        grid: { color: 'rgba(0, 0, 0, 0.03)' }
+                    }
+                }
+            }
+        });
 
         const branchTbody = document.querySelector('#branchTable tbody');
         branchTbody.innerHTML = '';
