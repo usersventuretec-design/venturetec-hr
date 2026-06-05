@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLC PAYROLL & HR - Management System</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* ลูกเล่นกระจกโปร่งแสงโทนสว่าง (Light Glassmorphism) */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        }
+        /* อินพุตสไตล์ขาวสะอาดตาขอบน้ำเงินนุ่มนวล */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: #1e293b;
+            transition: all 0.3s ease;
+        }
+        .glass-input:focus {
+            background: #ffffff;
+            border-color: rgba(37, 99, 235, 0.6);
+            outline: none;
+            box-shadow: 0 0 12px rgba(37, 99, 235, 0.15);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-100 text-slate-800 p-6 font-sans relative overflow-x-hidden">
+
+    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-400/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-[10%] right-[-5%] w-96 h-96 bg-indigo-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+        
+        <header class="mb-10 flex justify-between items-center border-b border-slate-200 pb-5">
+            <div>
+                <h1 class="text-3xl font-extrabold tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-blue-800 via-indigo-950 to-blue-600">
+                    VLC PAYROLL & HR
+                </h1>
+                <p class="text-sm text-slate-500 mt-1">ระบบจัดการข้อมูลพนักงานและเงินเดือน (Premium White & Blue Tone)</p>
+            </div>
+            <button id="btn-refresh" class="px-5 py-2.5 bg-white hover:bg-slate-50 border border-slate-200 text-blue-700 rounded-xl transition-all duration-300 shadow-sm text-sm font-semibold cursor-pointer">
+                รีเฟรชข้อมูล
+            </button>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-indigo-600"></div>
+                <p class="text-xs uppercase tracking-wider text-slate-500 font-bold">พนักงานทั้งหมด</p>
+                <h3 class="text-4xl font-black mt-2 text-blue-700" id="stat-staff">0 <span class="text-lg font-light text-slate-500">คน</span></h3>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-500 to-blue-600"></div>
+                <p class="text-xs uppercase tracking-wider text-slate-500 font-bold">ฐานเงินเดือนรวมประจำเดือน</p>
+                <h3 class="text-4xl font-black mt-2 text-indigo-950" id="stat-total-payroll">฿0</h3>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-indigo-500 to-purple-600"></div>
+                <p class="text-xs uppercase tracking-wider text-slate-500 font-bold">เงินเดือนเฉลี่ย/คน</p>
+                <h3 class="text-4xl font-black mt-2 text-indigo-600" id="stat-avg-salary">฿0</h3>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            
+            <div class="glass-card rounded-3xl p-6 shadow-xl sticky top-6">
+                <div class="border-b border-slate-200 pb-4 mb-5">
+                    <h2 id="form-title" class="text-xl font-bold text-slate-900 tracking-wide">เพิ่มข้อมูลพนักงานใหม่</h2>
+                    <p id="form-desc" class="text-xs text-slate-500 mt-1">กรอกรายละเอียดเพื่อบันทึกลงระบบฐานข้อมูลเรียลไทม์</p>
+                </div>
+
+                <form id="employee-form" class="space-y-4">
+                    <input type="hidden" id="emp-id">
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">รหัสพนักงาน</label>
+                        <input type="text" id="emp-code" required placeholder="เช่น EMP001" class="w-full glass-input px-4 py-2.5 rounded-xl text-sm">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">ชื่อจริง</label>
+                            <input type="text" id="emp-firstname" required placeholder="ชื่อ" class="w-full glass-input px-4 py-2.5 rounded-xl text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">นามสกุล</label>
+                            <input type="text" id="emp-lastname" required placeholder="นามสกุล" class="w-full glass-input px-4 py-2.5 rounded-xl text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">แผนก</label>
+                        <input type="text" id="emp-department" placeholder="เช่น คลังสินค้า, บัญชี, ไอที" class="w-full glass-input px-4 py-2.5 rounded-xl text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">สิทธิ์การเข้าถึงระบบ</label>
+                        <select id="emp-role" class="w-full glass-input px-4 py-2.5 rounded-xl text-sm bg-white">
+                            <option value="Employee">Employee (พนักงานทั่วไป)</option>
+                            <option value="Admin">Admin (ผู้ดูแลระบบ)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">เงินเดือนพื้นฐาน (บาท)</label>
+                        <input type="number" id="emp-salary" required min="0" placeholder="เช่น 25000" class="w-full glass-input px-4 py-2.5 rounded-xl text-sm font-semibold">
+                    </div>
+
+                    <div class="space-y-2 pt-2">
+                        <button type="submit" id="btn-submit" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white rounded-xl shadow-md transition-all duration-300 font-semibold text-sm cursor-pointer shadow-blue-500/10">
+                            🚀 บันทึกข้อมูลพนักงาน
+                        </button>
+                        <button type="button" id="btn-cancel-edit" class="hidden w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition-all duration-300 text-xs font-semibold border border-slate-200 cursor-pointer">
+                            ยกเลิกการแก้ไข
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="lg:col-span-2 glass-card rounded-3xl overflow-hidden">
+                <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-white/40">
+                    <h2 class="text-xl font-bold tracking-wide text-slate-900">รายชื่อพนักงานและโครงสร้างรายได้</h2>
+                    <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-100 text-xs rounded-full font-bold">
+                        ข้อมูลเรียลไทม์
+                    </span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100/70 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4 pl-6 font-bold">รหัสพนักงาน</th>
+                                <th class="p-4 font-bold">ชื่อ - นามสกุล</th>
+                                <th class="p-4 font-bold">แผนก</th>
+                                <th class="p-4 font-bold">สิทธิ์</th>
+                                <th class="p-4 font-bold text-right">เงินเดือนพื้นฐาน</th>
+                                <th class="p-4 pr-6 font-bold text-center">จัดการข้อมูล</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employee-table-body" class="divide-y divide-slate-100 text-sm text-slate-700">
+                            <tr>
+                                <td colspan="6" class="p-10 text-center text-slate-400">กำลังเชื่อมต่อฐานข้อมูล...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // กำหนดค่าการเชื่อมต่อของ Supabase
+        const SUPABASE_URL = "https://zugpzwrrghmirykjvwqn.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_xlCKUyFin31A_zQsx57V9w_3Fijz0aB";
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let localEmployeesCache = []; 
+
+        // ผูก Event Listener กับอิลิเมนต์ต่างๆ
+        document.addEventListener("DOMContentLoaded", fetchAndRenderData);
+        document.getElementById("btn-refresh").addEventListener("click", fetchAndRenderData);
+        document.getElementById("employee-form").addEventListener("submit", handleFormSubmit);
+        document.getElementById("btn-cancel-edit").addEventListener("click", resetFormToCreateMode);
+
+        // ฟังก์ชันดึงข้อมูลจากตาราง employees มาแสดงผล
+        async function fetchAndRenderData() {
+            const tableBody = document.getElementById("employee-table-body");
+            
+            try {
+                const { data: employees, error } = await supabaseClient
+                    .from('employees')
+                    .select('*')
+                    .order('employee_code', { ascending: true });
+
+                if (error) throw error;
+                localEmployeesCache = employees || [];
+
+                if (localEmployeesCache.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="6" class="p-10 text-center text-slate-400">ไม่พบข้อมูลพนักงานในระบบ</td></tr>`;
+                    updateStats(0, 0, 0);
+                    return;
+                }
+
+                // คำนวณยอดรวมและสถิติ
+                const totalStaff = localEmployeesCache.length;
+                const totalPayroll = localEmployeesCache.reduce((sum, emp) => sum + Number(emp.base_salary), 0);
+                const avgSalary = totalPayroll / totalStaff;
+                updateStats(totalStaff, totalPayroll, avgSalary);
+
+                // เรนเดอร์ข้อมูลลงตาราง
+                tableBody.innerHTML = "";
+                localEmployeesCache.forEach(emp => {
+                    const salaryFormatted = Number(emp.base_salary).toLocaleString(undefined, { minimumFractionDigits: 2 });
+                    const roleClass = emp.role === 'Admin' 
+                        ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                        : 'bg-slate-100 text-slate-600 border border-slate-200';
+
+                    const rowHTML = `
+                        <tr class="hover:bg-white/40 transition-colors duration-150">
+                            <td class="p-4 pl-6 font-mono text-blue-600 font-bold">${emp.employee_code}</td>
+                            <td class="p-4 font-semibold text-slate-900">${emp.first_name} ${emp.last_name}</td>
+                            <td class="p-4">
+                                <span class="px-2.5 py-1 bg-slate-50 border border-slate-200 rounded-md text-xs font-medium">${emp.department || 'ไม่ระบุ'}</span>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${roleClass}">${emp.role}</span>
+                            </td>
+                            <td class="p-4 text-right font-bold text-slate-800">฿${salaryFormatted}</td>
+                            <td class="p-4 pr-6 text-center space-x-1.5">
+                                <button onclick="prepareEditForm('${emp.id}')" class="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-200 text-xs rounded-lg transition-colors cursor-pointer font-semibold">แก้ไข</button>
+                                <button onclick="handleDeleteEmployee('${emp.id}', '${emp.first_name}')" class="px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs rounded-lg transition-colors cursor-pointer font-semibold">ลบ</button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.insertAdjacentHTML('beforeend', rowHTML);
+                });
+
+            } catch (error) {
+                console.error("Error:", error.message);
+                tableBody.innerHTML = `<tr><td colspan="6" class="p-10 text-center text-rose-500 font-semibold">โหลดข้อมูลไม่สำเร็จ: ${error.message}</td></tr>`;
+            }
+        }
+
+        // ดึงข้อมูลแถวที่ต้องการแก้ไขมาใส่ใน Form
+        function prepareEditForm(id) {
+            const emp = localEmployeesCache.find(e => e.id === id);
+            if (!emp) return;
+
+            document.getElementById("emp-id").value = emp.id;
+            document.getElementById("emp-code").value = emp.employee_code;
+            document.getElementById("emp-firstname").value = emp.first_name;
+            document.getElementById("emp-lastname").value = emp.last_name;
+            document.getElementById("emp-department").value = emp.department || '';
+            document.getElementById("emp-role").value = emp.role;
+            document.getElementById("emp-salary").value = emp.base_salary;
+
+            document.getElementById("form-title").innerText = "🔧 แก้ไขข้อมูลพนักงาน";
+            document.getElementById("form-desc").innerText = `กำลังอัปเดตข้อมูลของ: ${emp.first_name} ${emp.last_name}`;
+            document.getElementById("btn-submit").innerText = "💾 อัปเดตข้อมูล";
+            document.getElementById("btn-cancel-edit").classList.remove("hidden");
+            
+            document.getElementById("form-title").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ประมวลผลการส่งฟอร์ม (Insert หรือ Update)
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const id = document.getElementById("emp-id").value;
+            const employee_code = document.getElementById("emp-code").value.trim();
+            const first_name = document.getElementById("emp-firstname").value.trim();
+            const last_name = document.getElementById("emp-lastname").value.trim();
+            const department = document.getElementById("emp-department").value.trim();
+            const role = document.getElementById("emp-role").value;
+            const base_salary = parseFloat(document.getElementById("emp-salary").value);
+
+            const payload = { employee_code, first_name, last_name, department, role, base_salary };
+
+            try {
+                if (id) {
+                    // ทำการอัปเดตข้อมูลเดิม
+                    const { error } = await supabaseClient
+                        .from('employees')
+                        .update(payload)
+                        .eq('id', id);
+
+                    if (error) throw error;
+                    alert("✨ อัปเดตข้อมูลพนักงานเรียบร้อยแล้ว!");
+                } else {
+                    // ทำการเพิ่มข้อมูลใหม่
+                    const { error } = await supabaseClient
+                        .from('employees')
+                        .insert([payload]);
+
+                    if (error) throw error;
+                    alert("🎉 เพิ่มพนักงานเข้าสู่ระบบสำเร็จ!");
+                }
+
+                resetFormToCreateMode();
+                fetchAndRenderData();
+
+            } catch (error) {
+                alert("❌ เกิดข้อผิดพลาด: " + (error.message.includes("duplicate") ? "รหัสพนักงานซ้ำซ้อน" : error.message));
+            }
+        }
+
+        // ลบข้อมูลพนักงานออกจาก Supabase
+        async function handleDeleteEmployee(id, name) {
+            if (!confirm(`คุณต้องการลบข้อมูลของ "${name}" ออกจากระบบใช่หรือไม่?`)) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('employees')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+                alert("🗑️ ลบข้อมูลเรียบร้อยแล้ว");
+                
+                if(document.getElementById("emp-id").value === id) {
+                    resetFormToCreateMode();
+                }
+                
+                fetchAndRenderData();
+            } catch (error) {
+                alert("❌ ไม่สามารถลบข้อมูลได้: " + error.message);
+            }
+        }
+
+        // รีเซ็ตฟอร์มกลับสู่โหมดเพิ่มข้อมูลปกติ
+        function resetFormToCreateMode() {
+            document.getElementById("employee-form").reset();
+            document.getElementById("emp-id").value = "";
+            document.getElementById("form-title").innerText = "เพิ่มข้อมูลพนักงานใหม่";
+            document.getElementById("form-desc").innerText = "กรอกรายละเอียดเพื่อบันทึกลงระบบฐานข้อมูลเรียลไทม์";
+            document.getElementById("btn-submit").innerText = "🚀 บันทึกข้อมูลพนักงาน";
+            document.getElementById("btn-cancel-edit").classList.add("hidden");
+        }
+
+        // ฟังก์ชันช่วยอัปเดตตัวเลขแผงสถิติข้อมูล
+        function updateStats(staffCount, totalPayroll, avgSalary) {
+            document.getElementById("stat-staff").innerHTML = `${staffCount} <span class="text-lg font-light text-slate-500">คน</span>`;
+            document.getElementById("stat-total-payroll").innerText = `฿${totalPayroll.toLocaleString()}`;
+            document.getElementById("stat-avg-salary").innerText = `฿${Math.round(avgSalary).toLocaleString()}`;
+        }
+    </script>
+</body>
+</html>
