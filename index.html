@@ -111,7 +111,7 @@
           <span class="text-slate-400 font-bold text-sm">VS</span>
         </div>
         <div class="flex flex-col items-start">
-          <label class="text-[11px] font-bold text-slate-500 uppercase">เปรียบเทียบกับ</label>
+          <label class="text-[11px] font-bold text-slate-500 uppercase">เปรียเปเทียบกับ</label>
           <select id="compareMonthFilter" onchange="loadDashboardData()" class="border border-gray-300 p-2 rounded bg-gray-50 text-slate-600 outline-none w-32 text-sm cursor-pointer shadow-sm"></select>
         </div>
         <div class="flex flex-col items-start pt-4 ml-2">
@@ -195,11 +195,7 @@
                 <div class="input-wrapper">
                     <label>งวดประจำเดือน:</label>
                     <select id="kpiPeriodMonth">
-                        <option value="January 2026">January 2026</option><option value="February 2026">February 2026</option>
-                        <option value="March 2026">March 2026</option><option value="April 2026">April 2026</option>
-                        <option value="May 2026" selected>May 2026</option><option value="June 2026">June 2026</option>
-                        <option value="July 2026">July 2026</option><option value="August 2026">August 2026</option>
-                    </select>
+                        </select>
                 </div>
                 <div class="input-wrapper">
                     <label>เลือกชื่อพนักงานขาย:</label>
@@ -284,11 +280,7 @@
               <div class="input-wrapper"><label>พนักงานคนที่ 1:</label><select id="selectEmployeeSlip1"><option value="">-- กรุณาเลือก --</option></select></div>
               <div class="input-wrapper"><label>พนักงานคนที่ 2:</label><select id="selectEmployeeSlip2"><option value="">-- ไม่เลือก --</option></select></div>
               <div class="input-wrapper"><label>ระบุงวดประจำเดือน:</label><select id="selectPayrollMonth">
-                  <option value="January 2026">January 2026</option><option value="February 2026">February 2026</option>
-                  <option value="March 2026">March 2026</option><option value="April 2026">April 2026</option>
-                  <option value="May 2026" selected>May 2026</option><option value="June 2026">June 2026</option>
-                  <option value="July 2026">July 2026</option><option value="August 2026">August 2026</option>
-              </select></div>
+                  </select></div>
           </div>
           <button class="btn-ui" onclick="loadDualEmployeesSlips()"><i class="fa-solid fa-file-shield"></i> ประมวลผลสร้างสลิป</button>
           <div class="loading" id="calcLoader"><i class="fa-solid fa-circle-notch"></i> กำลังรวบรวมนาทีสะสมตามวิกบัญชี...</div>
@@ -342,9 +334,43 @@
     let cachedTargetSalesRows = [];
 
     window.onload = function() { 
+      generateDynamicMonths(); 
       loadDashboardData();   
       loadEmployeeList();    
     };
+
+    // ==========================================
+    // 🗓️ ฟังก์ชันสร้าง Dropdown เดือน/ปี อัตโนมัติ (รองรับข้อมูลย้อนหลังและล่วงหน้า)
+    // ==========================================
+    function generateDynamicMonths() {
+        const monthsEn = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonthIndex = currentDate.getMonth(); 
+        
+        const kpiSelect = document.getElementById('kpiPeriodMonth');
+        const slipSelect = document.getElementById('selectPayrollMonth');
+        
+        let optionsHTML = '';
+        
+        const startYear = 2025; 
+        const endYear = currentYear + 1;
+
+        for (let y = endYear; y >= startYear; y--) {
+            optionsHTML += `<optgroup label="--- Year ${y} ---">`;
+            
+            monthsEn.forEach((month, index) => {
+                const isSelected = (index === currentMonthIndex && y === currentYear) ? 'selected' : '';
+                optionsHTML += `<option value="${month} ${y}" ${isSelected}>${month} ${y}</option>`;
+            });
+            
+            optionsHTML += `</optgroup>`;
+        }
+
+        if(kpiSelect) kpiSelect.innerHTML = optionsHTML;
+        if(slipSelect) slipSelect.innerHTML = optionsHTML;
+    }
 
     function switchTab(tabId, element) {
       document.querySelectorAll('.app-section, .tab-view').forEach(s => s.classList.remove('active'));
@@ -372,7 +398,7 @@
         if (summaryErr) throw summaryErr;
 
         const { data: kpiRecords, error: kpiErr } = await supabaseClient.from('company_kpi_records').select('*');
-        if (kpiErr && kpiErr.code !== '42P01') console.warn(kpiErr); // Ignore if table doesn't exist yet
+        if (kpiErr && kpiErr.code !== '42P01') console.warn(kpiErr); 
 
         const { data: salesRecords, error: salesErr } = await supabaseClient.from('sales_records').select('*');
         if (salesErr) throw salesErr;
@@ -409,7 +435,6 @@
         const targetRowsSales = targetRowsAll.filter(r => empMetaMap[String(r.employee_id).trim()]?.is_sales === true);
         const compareRowsSales = compareRowsAll.filter(r => empMetaMap[String(r.employee_id).trim()]?.is_sales === true);
 
-        // 💡 ย้ายตำแหน่งประมวลผลตัวแปร tSalesHeadcount ขึ้นมาประกาศค่าด้านบนสุด ป้องกัน Error tSalesHeadcount is not defined
         const tSalesHeadcount = targetRowsSales.length;
         const tSalesPayroll = targetRowsSales.reduce((sum, r) => sum + (Number(r.net_amount) || 0), 0);
         const tSalesBasic = targetRowsSales.reduce((sum, r) => sum + (Number(r.basic_salary) || 0), 0);
@@ -463,10 +488,8 @@
         // 📈 ส่วนประมวลผลเพิ่มกราฟใหม่ 2 ตัวตามภาพสเก็ตช์
         // ==========================================
         
-        // 1. เรียงลำดับเดือนจากอดีตไปปัจจุบันเพื่อความถูกต้องของแกน X (Timeline)
         const chronologicalPeriods = Array.from(periodsSet).sort((a, b) => new Date(a) - new Date(b));
 
-        // 2. คำนวณหา Array ข้อมูล Revenue และค่าใช้จ่าย Compensation รายเดือน
         const revenueDataTimeline = [];
         const salaryDataTimeline = [];
         const otDataTimeline = [];
@@ -474,18 +497,15 @@
         const commissionDataTimeline = [];
 
         chronologicalPeriods.forEach(p => {
-            // รวบรวมยอดขายประจำเดือน
             const monthSales = salesRecords.filter(s => s.month_period === p);
             const totalSales = monthSales.length > 0 ? monthSales.reduce((sum, s) => sum + Number(s.actual_sales), 0) : 0;
             revenueDataTimeline.push(totalSales);
 
-            // รวบรวมองค์ประกอบเงินเดือนและสวัสดิการทีม
             const monthPayrollRows = summaryData.filter(r => r.payroll_month === p);
             
             const totalSalary = monthPayrollRows.reduce((sum, r) => sum + (Number(r.basic_salary) || 0), 0);
             const totalOt = monthPayrollRows.reduce((sum, r) => sum + (Number(r.ot_earnings) || 0), 0);
             
-            // สัดส่วน Commission และ Incentive
             const totalCommission = monthSales.reduce((sum, s) => sum + (Number(s.actual_sales) * 0.03), 0); 
             const totalIncentive = monthPayrollRows.reduce((sum, r) => sum + (Number(r.total_earnings) - Number(r.basic_salary) - (Number(r.ot_earnings)||0)), 0);
 
@@ -495,7 +515,6 @@
             commissionDataTimeline.push(totalCommission);
         });
 
-        // 3. ปรับลายเส้นสปไลน์ให้พริ้วไหวโค้งมน (Cubic Interpolation) ตามแบบฟอร์มดีไซน์
         charts.revenueTrend = new Chart(document.getElementById('executiveRevenueTrendChart'), {
             type: 'line',
             data: {
@@ -503,10 +522,10 @@
                 datasets: [{
                     label: 'Actual Revenue',
                     data: revenueDataTimeline,
-                    borderColor: '#16a34a', // สีเขียวหรูหราตาม Sketch
+                    borderColor: '#16a34a',
                     backgroundColor: 'rgba(22, 163, 74, 0.05)',
                     borderWidth: 3,
-                    tension: 0.4, // ความโค้งมนของเส้น (Spline Curve)
+                    tension: 0.4, 
                     pointBackgroundColor: '#16a34a',
                     fill: true
                 }]
@@ -514,60 +533,32 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' }
-                },
+                plugins: { legend: { position: 'bottom' } },
                 scales: {
-                    y: {
-                        ticks: { callback: function(val) { return '฿' + val.toLocaleString(); } },
-                        grid: { color: 'rgba(0, 0, 0, 0.03)' }
-                    },
+                    y: { ticks: { callback: function(val) { return '฿' + val.toLocaleString(); } }, grid: { color: 'rgba(0, 0, 0, 0.03)' } },
                     x: { grid: { display: false } }
                 }
             }
         });
 
-        // 4. สร้างกราฟแท่งแบบ Stacked Bar (แยกชั้นประเภทรายจ่ายในแท่งเดียว)
         charts.compensationTrend = new Chart(document.getElementById('executiveCompTrendChart'), {
             type: 'bar',
             data: {
                 labels: chronologicalPeriods,
                 datasets: [
-                    {
-                        label: 'Salary (ฐานเงินเดือน)',
-                        data: salaryDataTimeline,
-                        backgroundColor: '#1e3a8a', // น้ำเงินกรมท่าเข้ม
-                    },
-                    {
-                        label: 'OT (ค่าล่วงเวลา)',
-                        data: otDataTimeline,
-                        backgroundColor: '#2563eb', // น้ำเงินสว่าง
-                    },
-                    {
-                        label: 'Incentive (เงินพิเศษ)',
-                        data: incentiveDataTimeline,
-                        backgroundColor: '#f59e0b', // เหลืองส้ม Amber
-                    },
-                    {
-                        label: 'Commission (ค่าคอมมิชชัน)',
-                        data: commissionDataTimeline,
-                        backgroundColor: '#7c3aed', // ม่วงสว่าง Luxury
-                    }
+                    { label: 'Salary (ฐานเงินเดือน)', data: salaryDataTimeline, backgroundColor: '#1e3a8a' },
+                    { label: 'OT (ค่าล่วงเวลา)', data: otDataTimeline, backgroundColor: '#2563eb' },
+                    { label: 'Incentive (เงินพิเศษ)', data: incentiveDataTimeline, backgroundColor: '#f59e0b' },
+                    { label: 'Commission (ค่าคอมมิชชัน)', data: commissionDataTimeline, backgroundColor: '#7c3aed' }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' }
-                },
+                plugins: { legend: { position: 'bottom' } },
                 scales: {
                     x: { stacked: true, grid: { display: false } },
-                    y: { 
-                        stacked: true,
-                        ticks: { callback: function(val) { return '฿' + val.toLocaleString(); } },
-                        grid: { color: 'rgba(0, 0, 0, 0.03)' }
-                    }
+                    y: { stacked: true, ticks: { callback: function(val) { return '฿' + val.toLocaleString(); } }, grid: { color: 'rgba(0, 0, 0, 0.03)' } }
                 }
             }
         });
@@ -601,7 +592,6 @@
           });
         }
 
-        // ประมวลผลสร้างตารางวิเคราะห์งบกำไรขาดทุนพนักงานทุกแผนก
         const statementTbody = document.getElementById('companyProfitStatementTableBody');
         statementTbody.innerHTML = '';
         
