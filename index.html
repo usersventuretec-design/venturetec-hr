@@ -19,7 +19,7 @@
         --text-gray: #475569;
     }
     body { background-color: #f1f5f9; font-family: 'Prompt', sans-serif; display: flex; overflow-x: hidden; margin: 0;}
-    .sidebar { background-color: #0f172a; width: 260px; height: 100vh; position: fixed; display: flex; flex-direction: column; color: #cbd5e1; z-index: 50; }
+    .sidebar { background-color: #0f172a; width: 260px; height: 100vh; position: fixed; display: flex; flex-column: column; color: #cbd5e1; z-index: 50; }
     .sidebar-brand-box { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 5px; }
     .nav-item { padding: 14px 24px; display: flex; align-items: center; cursor: pointer; border-left: 4px solid transparent; transition: 0.2s; font-size: 14px;}
     .nav-item:hover, .nav-item.active { background-color: #1e293b; color: white; border-left-color: #3b82f6; }
@@ -72,13 +72,12 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-100 text-slate-800 p-6 font-sans relative overflow-x-hidden">
 
-  <!-- SIDEBAR MENU -->
   <div class="sidebar">
     <div class="sidebar-brand-box">
       <img src="Venturetec-03.png" class="w-14 h-14 object-contain mb-1 filter drop-shadow(0 4px 6px rgba(0,0,0,0.2))" alt="Venturetec Logo">
       <h2 class="text-white font-bold text-lg tracking-wider">VENTURETEC HR</h2>
     </div>
-    <div class="flex-1 mt-2">
+    <div class="flex-1 flex flex-col mt-2">
       <div class="nav-item active" onclick="switchTab('view-summary', this)"><i class="fa-solid fa-chart-pie"></i> CEO Dashboard</div>
       <div class="nav-item" onclick="switchTab('view-ceo-setting', this)"><i class="fa-solid fa-sliders text-amber-500"></i> ตั้งค่าข้อมูลผู้บริหาร</div>
       <div class="nav-item" onclick="switchTab('view-employee', this)"><i class="fa-solid fa-users-gear"></i> ฐานข้อมูลพนักงาน</div>
@@ -120,7 +119,6 @@
       </div>
     </div>
 
-    <!-- VIEW: SUMMARY (CEO DASHBOARD) -->
     <div id="view-summary" class="tab-view active">
       <div id="error-container"></div>
       
@@ -128,7 +126,6 @@
         <div class="card-ui p-6 text-center animate-pulse text-blue-500 col-span-5"><i class="fa fa-spinner fa-spin mr-2"></i>กำลังโหลดข้อมูล...</div>
       </div>
       
-      <!-- 🎯 แผงแคนวาสเรนเดอร์กราฟคู่ตามภาพสเก็ตช์ image_a7ff83.jpg -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="card-ui">
           <h3 class="card-header text-sm font-bold text-slate-600 mb-4"><i class="fa fa-chart-line text-blue-600"></i> Revenue Trend (แนวโน้มรายได้รวมบริษัท)</h3>
@@ -167,7 +164,6 @@
         </div>
       </div>
 
-      <!-- ตารางภาพรวมรายงวดบริษัทดึงข้อมูลจากชีต Monthly_KPI จริง -->
       <div class="card-ui mb-6 overflow-x-auto">
           <h3 class="text-sm font-bold text-slate-700 mb-4"><i class="fa-solid fa-briefcase text-blue-800"></i> COMPANY PROFITABILITY STATEMENT & OPERATIONAL PAYROLL COST</h3>
           <table class="data-table w-full">
@@ -190,7 +186,6 @@
       </div>
     </div>
 
-    <!-- VIEW: CEO DASHBOARD KPI SETTING -->
     <div id="view-ceo-setting" class="tab-view">
         <div class="card-ui">
             <h3><i class="fa-solid fa-sliders text-amber-500"></i> ฟอร์มคีย์เป้าหมายและยอดขายของทีมเซลล์ (ตามโครงสร้างคลังข้อมูลจริงบริษัท)</h3>
@@ -242,7 +237,6 @@
         </div>
     </div>
 
-    <!-- VIEW: EMPLOYEE DATABASE -->
     <div id="view-employee" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-user-gear"></i> ฟอร์มจัดการข้อมูลพนักงาน</h3>
@@ -270,7 +264,6 @@
       </div>
     </div>
 
-    <!-- VIEW: FINGERPRINT UPLOAD -->
     <div id="view-scan" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-fingerprint"></i> กล่องนำเข้าข้อมูลเวลาทำงานดิบ (Log Data Input)</h3>
@@ -282,7 +275,6 @@
       </div>
     </div>
 
-    <!-- VIEW: PAYROLL STUDIO -->
     <div id="view-slip" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-calculator"></i> เลือกพนักงานเพื่อพิมพ์สลิป</h3>
@@ -308,7 +300,6 @@
       </div>
     </div>
 
-    <!-- VIEW: PAYROLL STATEMENT REPORT -->
     <div id="view-report" class="tab-view">
       <div class="card-ui">
           <h3><i class="fa-solid fa-sliders"></i> เลือกรูปแบบการคัดกรองรายงาน</h3>
@@ -336,7 +327,6 @@
 
   </div>
 
-  <!-- ==================== ส่วนของระบบควบคุม SUPABASE JAVASCRIPT REALTIME ==================== -->
   <script>
     const SUPABASE_URL = "https://icnvofzjmonueefelajk.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_75XCIAfjQqnd8tDxZg36Yg_cde3Bsoo";
@@ -416,18 +406,18 @@
         const targetRowsSales = targetRowsAll.filter(r => empMetaMap[String(r.employee_id).trim()]?.is_sales === true);
         const compareRowsSales = compareRowsAll.filter(r => empMetaMap[String(r.employee_id).trim()]?.is_sales === true);
 
+        // 🎯 ดึงสถิติตัวแปรทีมเซลและพนักงานทั้งหมด ป้องกันจุดทับซ้อนบกพร่อง
         const tSalesHeadcount = targetRowsSales.length;
         const tSalesPayroll = targetRowsSales.reduce((sum, r) => sum + (Number(r.net_amount) || 0), 0);
         const tSalesBasic = targetRowsSales.reduce((sum, r) => sum + (Number(r.basic_salary) || 0), 0);
         const tSalesOt = targetRowsSales.reduce((sum, r) => sum + (Number(r.ot_earnings) || 0), 0);
 
-        const cSalesHeadcount = compareRowsSales.length || 1;
         const cSalesPayroll = compareRowsSales.reduce((sum, r) => sum + (Number(r.net_amount) || 0), 0) || 1;
 
         const tTotalPayrollAllDept = targetRowsAll.reduce((sum, r) => sum + (Number(r.net_amount) || 0), 0);
         const cTotalPayrollAllDept = compareRowsAll.reduce((sum, r) => sum + (Number(r.net_amount) || 0), 0) || 1;
 
-        const headcountGrowth = (((tSalesHeadcount - cSalesHeadcount) / cSalesHeadcount) * 100).toFixed(1);
+        const headcountGrowth = (((tSalesHeadcount - compareRowsSales.length) / (compareRowsSales.length || 1)) * 100).toFixed(1);
         const payrollGrowth = (((tTotalPayrollAllDept - cTotalPayrollAllDept) / cTotalPayrollAllDept) * 100).toFixed(1);
 
         const currentMonthSalesRows = salesRecords.filter(s => s.month_period === currentTargetVal);
@@ -452,7 +442,7 @@
           <div class="card-ui p-4 flex flex-col items-center border-t-4 border-emerald-500"><p class="text-xs text-slate-500 font-bold mb-1">Net Margin (หลังหักค่าแรง)</p><h2 class="text-2xl font-black text-slate-800">${formatM(grossProfit - tTotalPayrollAllDept)}</h2><p class="text-xs text-slate-400 mt-1">GP 35%: ${formatM(grossProfit)}</p></div>
         `;
 
-        // 🎯 สรรค์สร้างลูปเรียงตามแกนเวลาเพื่อดึงค่าพลอตกราฟตามความต้องการจริง
+        // สรรค์สร้างลูปเรียงตามแกนเวลาเพื่อดึงค่าพลอตกราฟตามภาพเทรนด์ image_a7ff83.jpg ให้ขึ้นแสดงผลบน Canvas จริง
         const reversedPeriods = [...dropdownPeriods].reverse();
         const trendSalesData = [];
         const trendSalaryData = [];
@@ -474,7 +464,7 @@
           trendIncentiveData.push(incentiveMock > 0 ? incentiveMock : basicSum * 0.1);
         });
 
-        // 🎯 แก้ไขคำสั่งเรนเดอร์กราฟ ชี้ไปที่ ID ของ Canvas ตัวรับข้อมูลโดยตรงเพื่อป้องกันกราฟหาย
+        // 🎯 สั่ง Render วาดกราฟลง Canvas ID ของหน้าแดชบอร์ดตรงจุดสำเร็จ
         const ctxRevenue = document.getElementById('revenueTrendChartCanvas').getContext('2d');
         charts.payroll = new Chart(ctxRevenue, { 
           type: 'line', 
@@ -520,9 +510,6 @@
           branchGroup[bName].payrollCost += Number(r.net_amount);
         });
 
-        const ctxDonut = document.getElementById('headcountChart').getContext('2d');
-        charts.donut = new Chart(ctxDonut, { type: 'doughnut', data: { labels: Object.keys(branchGroup).length > 0 ? Object.keys(branchGroup) : ['ไม่มีข้อมูลเซลล์'], datasets: [{ data: Object.keys(branchGroup).length > 0 ? Object.values(branchGroup).map(b => b.headcount) : [0], backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4'], cutout: '70%' }] }, options: { responsive: true, maintainAspectRatio: false } });
-
         const branchTbody = document.querySelector('#branchTable tbody');
         branchTbody.innerHTML = '';
         
@@ -547,6 +534,7 @@
             </tr>`;
         });
 
+        // รีเฟรชตารางวิเคราะห์งบกำไรขาดทุนภาพรวมพนักงานออฟฟิศทุกแผนก
         const statementTbody = document.getElementById('companyProfitStatementTableBody');
         statementTbody.innerHTML = '';
         
