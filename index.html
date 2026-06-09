@@ -1009,50 +1009,107 @@
     }
 
     function createSlipHTMLTemplate(index, data) {
-      const fName = data.emp.name.split(' ')[0] || data.emp.name; const lName = data.emp.name.split(' ')[1] || '';
+      const fName = data.emp.name.split(' ')[0] || data.emp.name; 
+      const lName = data.emp.name.split(' ')[1] || '';
+      
       return `
-        <div class="slip-box" id="slipBox_${index}">
-          <div class="slip-header">
-            <div class="company-brand">
-                <img src="Venturetec-03.png" class="company-logo" alt="Logo">
-                <div><strong style="font-size: 14px;">VENTURETEC MARKETING CO., LTD.</strong><br><span style="font-size: 11px;">238 Soi Ladprao 1 Chomphon Chatuchak Bangkok 10900</span></div>
+        <div class="slip-box" id="slipBox_${index}" style="background-color: white; border: 1px solid #000; padding: 25px 30px; color: #000; font-family: 'Prompt', sans-serif; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.02); max-width: 1000px; margin: 0 auto;">
+          
+          <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 12px; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <img src="Venturetec-03.png" style="width: 45px; height: auto; object-fit: contain;" alt="Logo" onerror="this.src='https://via.placeholder.com/45?text=VT'">
+              <div>
+                <strong style="font-size: 15px; tracking-wide">VENTURETEC MARKETING CO., LTD.</strong><br>
+                <span style="font-size: 11.5px; color: #333;">238 Soi Ladprao 1 Chomphon Chatuchak Bangkok 10900</span>
+              </div>
             </div>
-            <div style="text-align: right;"><strong style="color: #dc2626; font-size: 11px;">เอกสารลับเฉพาะ<br>CONFIDENTIAL</strong></div>
+            <div style="text-align: right; line-height: 1.3;">
+              <strong style="color: #dc2626; font-size: 11px; tracking-wider;">เอกสารลับเฉพาะ</strong><br>
+              <strong style="color: #dc2626; font-size: 11px; tracking-wider;">CONFIDENTIAL</strong>
+            </div>
           </div>
-          <div class="slip-title">เอกสารแสดงรายได้<br><span style="font-weight: normal; font-style: italic; text-decoration: underline;">Salary Slip</span></div>
-          <div class="slip-meta-grid">
-            <div class="meta-cell"><label>Pay Slip in:</label><span>${data.month}</span></div>
-            <div class="meta-cell"><label>Name:</label><span>${fName}</span></div>
-            <div class="meta-cell"><label>Surname:</label><span>${lName}</span></div>
-            <div class="meta-cell"><label>ID พนักงาน:</label><span>${data.emp.id}</span></div>
-            <div class="meta-cell" style="grid-column: span 2;"><label>Positions:</label><span>${data.emp.position || '-'}</span></div>
-            <div class="meta-cell"><label>Department:</label><span>${data.emp.dept || '-'}</span></div>
-            <div class="meta-cell"><label>Bank a/c no.:</label><span>${data.emp.bank_acc || '-'}</span></div>
+          
+          <div style="text-align: center; font-weight: 600; font-size: 18px; margin-bottom: 15px; tracking-wide;">
+            เอกสารแสดงรายได้<br>
+            <span style="font-weight: normal; font-style: italic; text-decoration: underline; font-size: 16px;">Salary Slip</span>
           </div>
-          <table class="slip-table">
-            <thead><tr><th>Earnings</th><th>Claims</th><th>Deductions</th></tr></thead>
+          
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 15px; font-size: 13px; margin-bottom: 15px; border-bottom: 1px dashed #000; padding-bottom: 15px;">
+            <div style="display: flex; gap: 5px;"><label style="font-weight: 600;">Pay Slip in:</label><span style="border-bottom: 1px dotted #000; flex: 1; padding-left: 5px;">${data.month}</span></div>
+            <div style="display: flex; gap: 5px;"><label style="font-weight: 600;">Name:</label><span style="border-bottom: 1px dotted #000; flex: 1; padding-left: 5px;">${fName}</span></div>
+            <div style="display: flex; gap: 5px;"><label style="font-weight: 600;">Surname:</label><span style="border-bottom: 1px dotted #000; flex: 1; padding-left: 5px;">${lName}</span></div>
+            <div style="display: flex; gap: 5px;"><label style="font-weight: 600;">Start date:</label><span style="border-bottom: 1px dotted #000; flex: 1; padding-left: 5px;">-</span></div>
+            <div style="display: flex; gap: 5px; grid-column: span 2;"><label style="font-weight: 600;">Positions:</label><span style="border-bottom: 1px dotted #000; flex: 1; padding-left: 5px;">${data.emp.position || 'Staff'}</span></div>
+            <div style="display: flex; gap: 5px;"><label style="font-weight: 600;">Department:</label><span style="border-bottom: 1px dotted #000; flex: 1; padding-left: 5px;">${data.emp.dept || '-'}</span></div>
+            <div style="display: flex; gap: 5px;"><label style="font-weight: 600;">Bank a/c no.:</label><span style="border-bottom: 1px dotted #000; flex: 1; padding-left: 5px;">${data.emp.bank_acc || '-'}</span></div>
+          </div>
+          
+          <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12.5px;">
+            <thead>
+              <tr>
+                <th style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: 600; background: #fff; width: 33.33%;">Earnings</th>
+                <th style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: 600; background: #fff; width: 33.33%;">Claims</th>
+                <th style="border: 1px solid #000; padding: 8px; text-align: center; font-weight: 600; background: #fff; width: 33.33%;">Deductions</th>
+              </tr>
+            </thead>
             <tbody>
               <tr>
-                <td>
-                  <div class="row-item"><span>Basic salary</span><input type="number" class="slip-input e-calc_${index}" id="iBasic_${index}" value="${data.emp.salary}" oninput="recalculateIndividualTotals(${index})"></div>
-                  <div class="row-item"><span>Overtime</span><input type="number" class="slip-input e-calc_${index}" id="iOvertime_${index}" value="${data.attendance.overtime}" oninput="recalculateIndividualTotals(${index})" style="color: blue;"></div>
+                <td style="border: 1px solid #000; padding: 10px 12px; vertical-align: top; line-height: 2;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Basic salary</span><input type="number" class="slip-input e-calc_${index}" id="iBasic_${index}" value="${data.emp.salary}" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Others</span><input type="number" class="slip-input e-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Bonus</span><input type="number" class="slip-input e-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Overtime</span><input type="number" class="slip-input e-calc_${index}" id="iOvertime_${index}" value="${data.attendance.overtime}" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent; color: blue;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Incentive (Sales)</span><input type="number" class="slip-input e-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Incentive (V-Chef)</span><input type="number" class="slip-input e-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Incentive (No Late)</span><input type="number" class="slip-input e-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
                 </td>
-                <td>
-                  <div class="row-item"><span>Extra benefit</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})"></div>
+                
+                <td style="border: 1px solid #000; padding: 10px 12px; vertical-align: top; line-height: 2;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Travelling</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Communication</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Transport</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Incentive</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Extra benefit</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="height: 32px;"></div> <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;"><span>Other claims</span><input type="number" class="slip-input c-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
                 </td>
-                <td>
-                  <div class="row-item"><span>Social security</span><input type="number" class="slip-input d-calc_${index}" id="iSocial_${index}" value="${data.attendance.social}" oninput="recalculateIndividualTotals(${index})"></div>
-                  <div class="row-item"><span>No work No Pay</span><input type="number" class="slip-input d-calc_${index}" id="iNoWork_${index}" value="${data.attendance.noWork}" oninput="recalculateIndividualTotals(${index})" style="color: red;"></div>
-                  <div class="row-item"><span>Others</span><input type="number" class="slip-input d-calc_${index}" id="iOtherDeduct_${index}" value="${data.attendance.othersDeduct}" oninput="recalculateIndividualTotals(${index})"></div>
+                
+                <td style="border: 1px solid #000; padding: 10px 12px; vertical-align: top; line-height: 2;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Social security</span><input type="number" class="slip-input d-calc_${index}" id="iSocial_${index}" value="${data.attendance.social}" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Withholding tax</span><input type="number" class="slip-input d-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Deposits</span><input type="number" class="slip-input d-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>No work No Pay</span><input type="number" class="slip-input d-calc_${index}" id="iNoWork_${index}" value="${data.attendance.noWork}" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent; color: red;"></div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;"><span>Unpaid Leave</span><input type="number" class="slip-input d-calc_${index}" value="0" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
+                  <div style="height: 32px;"></div> <div style="display: flex; justify-content: space-between; align-items: center;"><span>Others</span><input type="number" class="slip-input d-calc_${index}" id="iOtherDeduct_${index}" value="${data.attendance.othersDeduct}" oninput="recalculateIndividualTotals(${index})" style="width: 80px; border: none; text-align: right; font-family: inherit; outline: none; background: transparent;"></div>
                 </td>
               </tr>
-              <tr style="background-color: #fff; font-weight: bold;">
-                <td colspan="2"><div class="slip-total-box"><span>Total</span><span id="txtTotalEarnings_${index}">0.00</span></div></td>
-                <td><div class="slip-total-box"><span>Total deductions</span><span id="txtTotalDeductions_${index}">0.00</span></div></td>
+              
+              <tr style="font-weight: bold; background-color: #fff;">
+                <td colspan="2" style="border: 1px solid #000; padding: 6px 12px;">
+                  <div style="display: flex; justify-content: space-between; font-weight: 600;"><span>Total</span><span id="txtTotalEarnings_${index}">0.00</span></div>
+                </td>
+                <td style="border: 1px solid #000; padding: 6px 12px;">
+                  <div style="display: flex; justify-content: space-between; font-weight: 600;"><span>Total deductions</span><span id="txtTotalDeductions_${index}">0.00</span></div>
+                </td>
               </tr>
-              <tr><td colspan="3"><div style="display:flex; justify-content:space-between; align-items:center; font-size:14px; padding: 4px 0;"><strong>Net amount</strong><div><strong style="font-size: 16px; border-bottom: double 3px #000; padding-bottom: 2px;" id="txtNetAmount_${index}">0.00</strong> Baht</div></div></td></tr>
+              
+              <tr>
+                <td colspan="3" style="border: 1px solid #000; padding: 10px 12px; background: #fff;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; font-size: 15px;">
+                    <strong>Net amount</strong>
+                    <div>
+                      <strong style="font-size: 18px; border-bottom: double 3px #000; padding-bottom: 2px;" id="txtNetAmount_${index}">0.00</strong> 
+                      <span style="font-size: 14px; font-weight: bold; margin-left: 5px;">Baht</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
             </tbody>
           </table>
+          
+          <div style="text-align: center; font-size: 11px; color: #dc2626; margin-top: 15px; font-weight: 400; line-height: 1.5;">
+            หมายเหตุ : การเปิดเผยเงินเดือน หรือ รายได้ตนเองกับพนักงานท่านอื่น ถือเป็นความผิดร้ายแรงของบริษัทฯ Disclosing your salary or income to other employees is considered a serious offense by the company.
+          </div>
+          
         </div>
       `;
     }
