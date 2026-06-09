@@ -282,13 +282,17 @@
               <div class="input-wrapper"><label>ระบุงวดประจำเดือน:</label><select id="selectPayrollMonth">
                   </select></div>
           </div>
-          <button class="btn-ui" onclick="loadDualEmployeesSlips()"><i class="fa-solid fa-file-shield"></i> ประมวลผลสร้างสลิป</button>
+          
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 15px;">
+              <button class="btn-ui" onclick="loadDualEmployeesSlips()"><i class="fa-solid fa-file-shield"></i> ประมวลผลสร้างสลิป (รายบุคคล)</button>
+              <button class="btn-ui" style="background-color: var(--success);" onclick="processAndSaveAllEmployees()"><i class="fa-solid fa-users-gear"></i> ประมวลผลและบันทึกยอดทุกคน (Bulk Save)</button>
+          </div>
           <div class="loading" id="calcLoader"><i class="fa-solid fa-circle-notch"></i> กำลังรวบรวมนาทีสะสมตามวิกบัญชี...</div>
       </div>
       <div id="dualSlipsWrapper" style="display: none; margin-top: 20px;">
           <div class="control-panel-row" style="display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 15px;">
               <button class="btn-ui" style="background-color: #4b5563;" onclick="window.print()"><i class="fa-solid fa-print"></i> พิมพ์สลิปลง A4</button>
-              <button class="btn-ui" style="background-color: var(--success);" onclick="saveDualSlipsFinal()"><i class="fa-solid fa-circle-check"></i> บันทึกยอดลงสรุปบัญชี</button>
+              <button class="btn-ui" style="background-color: var(--success);" onclick="saveDualSlipsFinal()"><i class="fa-solid fa-circle-check"></i> บันทึกยอดลงสรุปบัญชี (ที่แสดงอยู่)</button>
           </div>
           <div class="slip-outer-container" id="slipsContainer"></div>
       </div>
@@ -951,7 +955,7 @@
       }
     }
 
-    // --- 7. ส่วนงานประมวลผลสลิปเงินเดือน A4 ---
+    // --- 7. ส่วนงานประมวลผลสลิปเงินเดือน A4 และประมวลผลรวดเดียว ---
     async function loadDualEmployeesSlips() {
       const id1 = document.getElementById('selectEmployeeSlip1').value; 
       const id2 = document.getElementById('selectEmployeeSlip2').value; 
@@ -1153,6 +1157,99 @@
       } catch (err) { alert(err.message); }
     }
 
+    // ==========================================
+    // 🚀 ฟังก์ชันประมวลผลและบันทึกยอดลงสรุปบัญชีสำหรับ "พนักงานทุกคน" รวดเดียว (Bulk Save)
+    // ==========================================
+    async function processAndSaveAllEmployees() {
+        const selectedMonth = document.getElementById('selectPayrollMonth').value;
+        if(!selectedMonth) { alert('กรุณาระบุงวดประจำเดือนก่อนครับ'); return; }
+
+        if(!confirm(`ยืนยันการประมวลผลและบันทึกยอดเงินเดือนของ "พนักงานทุกคน" ประจำงวด ${selectedMonth} ใช่หรือไม่?\n\n(ระบบจะคำนวณฐานเงินเดือน, OT, หักสาย และสวัสดิการพื้นฐานอัตโนมัติ)`)) return;
+
+        // แสดง Loader
+        document.getElementById('calcLoader').style.display = 'flex';
+        document.getElementById('calcLoader').innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังประมวลผลและบันทึกข้อมูลพนักงานทั้งหมด...';
+
+        try {
+            // 1. ดึงข้อมูลเวลาเข้าออกของทุกคนในเดือนนั้นรวดเดียว
+            const { data: allLogs, error: logsError } = await supabaseClient
+                .from('attendance_logs')
+                .select('employee_id, late_minutes, ot_minutes')
+                .eq('payroll_period', selectedMonth);
+
+            if (logsError) throw logsError;
+
+            let successCount = 0;
+
+            // 2. Loop คำนวณให้พนักงานทุกคน
+            for (const employee of localEmployeesCache) {
+                // กรองเฉพาะ Log ของพนักงานคนนี้
+                const empLogs = allLogs ? allLogs.filter(l => String(l.employee_id) === String(employee.id)) : [];
+                
+                let totalLateMinutes = 0; 
+                let totalOtMinutes = 0;
+                
+                empLogs.forEach(log => {
+                    totalLateMinutes += (Number(log.late_minutes) || 0);
+                    totalOtMinutes += (Number(log.ot_minutes) || 0);
+                });
+
+                // สูตรคำนวณ 
+                const salary = Number(employee.salary) || 0;
+                const minuteRate = ((salary / 30) / 8) / 60;
+                const noWorkNoPay = Math.round((totalLateMinutes * minuteRate) * 100) / 100;
+                const overtimeEarnings = Math.round((totalOtMinutes * minuteRate * 1.5) * 100) / 100;
+                const socialSecurity = Math.min(750, Math.round((salary * 0.05) * 100) / 100);
+                const othersDeduct = (Number(employee.court_deduct) || 0) + (Number(employee.student_loan_deduct) || 0);
+
+                const totalEarnings = salary + overtimeEarnings;
+                const totalDeductions = socialSecurity + noWorkNoPay + othersDeduct;
+                const netAmount = totalEarnings - totalDeductions;
+
+                const payload = {
+                    payroll_month: selectedMonth, 
+                    employee_id: employee.id, 
+                    name: employee.name, 
+                    position: employee.position || '-',
+                    dept: employee.dept || '-',
+                    basic_salary: salary,
+                    ot_earnings: overtimeEarnings,
+                    social_security: socialSecurity,
+                    no_work_no_pay: noWorkNoPay,
+                    others_deduct: othersDeduct,
+                    total_earnings: totalEarnings, 
+                    total_deductions: totalDeductions, 
+                    net_amount: netAmount
+                };
+
+                // 3. ยิงเข้า Supabase 
+                const { data: existingRow } = await supabaseClient
+                    .from('monthly_payroll_summary')
+                    .select('id')
+                    .eq('payroll_month', selectedMonth)
+                    .eq('employee_id', employee.id)
+                    .maybeSingle();
+
+                if (existingRow) {
+                    await supabaseClient.from('monthly_payroll_summary').update(payload).eq('id', existingRow.id);
+                } else {
+                    await supabaseClient.from('monthly_payroll_summary').insert([payload]);
+                }
+                
+                successCount++;
+            }
+
+            alert(`🎉 บันทึกปิดงบสำหรับพนักงานทั้งหมด ${successCount} คน เรียบร้อยครับ!`);
+            loadDashboardData(); // รีเฟรชแดชบอร์ดเมื่อบันทึกเสร็จสิ้น
+
+        } catch (err) { 
+            alert('เกิดข้อผิดพลาด: ' + err.message); 
+        } finally {
+            document.getElementById('calcLoader').style.display = 'none';
+            document.getElementById('calcLoader').innerHTML = '<i class="fa-solid fa-circle-notch"></i> กำลังรวบรวมนาทีสะสมตามวิกบัญชี...';
+        }
+    }
+
     // --- 8. ส่วนจัดแจงรายงานรายจ่ายรายปี (Report View) ---
     async function loadPayrollReport() {
         try {
@@ -1196,102 +1293,6 @@
         }
       });
     }
-    // ==========================================
-// 🚀 ฟังก์ชันประมวลผลและบันทึกยอดลงสรุปบัญชีสำหรับ "พนักงานทุกคน" รวดเดียว
-// ==========================================
-async function processAndSaveAllEmployees() {
-    const selectedMonth = document.getElementById('selectPayrollMonth').value;
-    if(!selectedMonth) { alert('กรุณาระบุงวดประจำเดือนก่อนครับ'); return; }
-
-    if(!confirm(`ยืนยันการประมวลผลและบันทึกยอดเงินเดือนของ "พนักงานทุกคน" ประจำงวด ${selectedMonth} ใช่หรือไม่?\n\n(ระบบจะคำนวณฐานเงินเดือน, OT, หักสาย และสวัสดิการพื้นฐานอัตโนมัติ)`)) return;
-
-    // แสดง Loader
-    document.getElementById('calcLoader').style.display = 'flex';
-    document.getElementById('calcLoader').innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังประมวลผลและบันทึกข้อมูลพนักงานทั้งหมด...';
-
-    try {
-        // 1. ดึงข้อมูลเวลาเข้าออกของทุกคนในเดือนนั้นรวดเดียว
-        const { data: allLogs, error: logsError } = await supabaseClient
-            .from('attendance_logs')
-            .select('employee_id, late_minutes, ot_minutes')
-            .eq('payroll_period', selectedMonth);
-
-        if (logsError) throw logsError;
-
-        let successCount = 0;
-
-        // 2. Loop คำนวณให้พนักงานทุกคน
-        for (const employee of localEmployeesCache) {
-            // กรองเฉพาะ Log ของพนักงานคนนี้
-            const empLogs = allLogs ? allLogs.filter(l => String(l.employee_id) === String(employee.id)) : [];
-            
-            let totalLateMinutes = 0; 
-            let totalOtMinutes = 0;
-            
-            empLogs.forEach(log => {
-                totalLateMinutes += (Number(log.late_minutes) || 0);
-                totalOtMinutes += (Number(log.ot_minutes) || 0);
-            });
-
-            // สูตรคำนวณ (เหมือนกับใน fetchIndividualSlipData)
-            const salary = Number(employee.salary) || 0;
-            const minuteRate = ((salary / 30) / 8) / 60;
-            const noWorkNoPay = Math.round((totalLateMinutes * minuteRate) * 100) / 100;
-            const overtimeEarnings = Math.round((totalOtMinutes * minuteRate * 1.5) * 100) / 100;
-            const socialSecurity = Math.min(750, Math.round((salary * 0.05) * 100) / 100);
-            const othersDeduct = (Number(employee.court_deduct) || 0) + (Number(employee.student_loan_deduct) || 0);
-
-            // รวมยอด (กรณีบันทึก Bulk จะอิงตัวเลขคงที่ตามระบบ หากมี Bonus/ค่าปรับพิเศษ ต้องตามไปแก้ทีละคน)
-            const totalEarnings = salary + overtimeEarnings;
-            const totalDeductions = socialSecurity + noWorkNoPay + othersDeduct;
-            const netAmount = totalEarnings - totalDeductions;
-
-            const payload = {
-                payroll_month: selectedMonth, 
-                employee_id: employee.id, 
-                name: employee.name, 
-                position: employee.position || '-',
-                dept: employee.dept || '-',
-                basic_salary: salary,
-                ot_earnings: overtimeEarnings,
-                social_security: socialSecurity,
-                no_work_no_pay: noWorkNoPay,
-                others_deduct: othersDeduct,
-                total_earnings: totalEarnings, 
-                total_deductions: totalDeductions, 
-                net_amount: netAmount
-            };
-
-            // 3. ตรวจสอบว่ามีข้อมูลเก่าในเดือนนี้หรือยัง (อิงตรรกะเดิมของระบบ)
-            const { data: existingRow } = await supabaseClient
-                .from('monthly_payroll_summary')
-                .select('id')
-                .eq('payroll_month', selectedMonth)
-                .eq('employee_id', employee.id)
-                .maybeSingle();
-
-            if (existingRow) {
-                await supabaseClient.from('monthly_payroll_summary').update(payload).eq('id', existingRow.id);
-            } else {
-                await supabaseClient.from('monthly_payroll_summary').insert([payload]);
-            }
-            
-            successCount++;
-        }
-
-        alert(`🎉 บันทึกปิดงบสำหรับพนักงานทั้งหมด ${successCount} คน เรียบร้อยครับ!`);
-        
-        // อัปเดตข้อมูลในหน้า Dashboard ทันที
-        loadDashboardData();
-
-    } catch (err) { 
-        alert('เกิดข้อผิดพลาด: ' + err.message); 
-    } finally {
-        // คืนค่า Loader กลับไปเป็นข้อความเดิมและซ่อนไว้
-        document.getElementById('calcLoader').style.display = 'none';
-        document.getElementById('calcLoader').innerHTML = '<i class="fa-solid fa-circle-notch"></i> กำลังรวบรวมนาทีสะสมตามวิกบัญชี...';
-    }
-}
   </script>
 </body>
 </html>
